@@ -4,28 +4,33 @@
 	<title>NES Paint</title>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" type="text/css" href="style.css">
-	<script src="nesPaint.js"></script>
+	<script src="./scripts/jquery-2.1.1.min.js"></script>
+	<script src="./scripts/jquery-ui-1.10.4.custom.min.js"></script>
+	<script src="./scripts/nesPaint.js"></script>
 </head>
 <body>
 	<div id="right">
 		<div id="previewWrapper">
-			<p>Preview</p>
+			<p class="label">Preview</p>
 			<div id="preview"></div>
 		</div>
 	</div>
 	<div id="left">
 		<div id="canvasWrapper">
-			<p>Canvas</p>
-			<table id="canvas"></table>
+			<p class="label">Canvas</p>
+			<div id="canvas"></div>
 		</div>
 	</div>
-	
 	<div id="menuWrapper">
 		<ul id="menu">
 			<li>File
 				<ul>
 					<li id="fileNew">&nbsp; New</li>
-				<!--<li id="fileNew">&nbsp; Load<span style="float: right;"> > </scan></li>-->
+					<!--
+					<li id="fileNew">&nbsp; Load
+						<span style="float: right;"> > </scan>
+					</li>
+					-->
 				</ul>
 			</li>
 			<li>Window
@@ -42,15 +47,14 @@
 			</li>
 		</ul>
 	</div>
-
 	<div id="toolsWrapper">
-		<p>Tools</p>
+		<p class="label">Tools</p>
 		<div id="tools">
-			<div id="pencil"></div>
-			<div id="eraser"></div>
-			<div id="smudge"></div>
-			<div id="fill"></div>
-			<div id="eyedrop"></div>
+			<div id="pencil" class="tool"></div>
+			<div id="eraser" class="tool"></div>
+			<div id="smudge" class="tool"></div>
+			<div id="fill" class="tool"></div>
+			<div id="eyedrop" class="tool"></div>
 			<div id="currentColor"></div>	
 		</div>
 		<table id="colorPalette">
