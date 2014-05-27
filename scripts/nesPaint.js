@@ -351,6 +351,13 @@ $(document).ready(function()
 		});
 	}
 
+	// update preview
+
+	function updatePreview(pixel)
+	{
+		preview.find('.selected div[data-num="' +  $(pixel).attr('data-num') + '"]').attr('class', $(pixel).attr('class'));
+	}
+
 	//////////////////////////////////////////
 	// tools
 	//////////////////////////////////////////
