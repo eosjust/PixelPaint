@@ -298,8 +298,10 @@ table {
 
 #popUpContent input {
 	color: #000;
-	padding-left: 6px;
 	border: 1px solid #333;
+}
+#popUpContent input[type='text'] {
+	padding-left: 6px;
 }
 
 #popUpSubmit {
