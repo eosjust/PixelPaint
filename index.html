@@ -11,7 +11,7 @@
 <body>
 	<div id="right">
 		<div id="previewWrapper">
-			<p class="label">Preview</p>
+			<p class="label">Sprite Sheet</p>
 			<div id="preview"></div>
 		</div>
 	</div>
@@ -26,11 +26,16 @@
 			<li>File
 				<ul>
 					<li id="fileNew">&nbsp; New</li>
-					<!--
-					<li id="fileNew">&nbsp; Load
-						<span style="float: right;"> > </scan>
-					</li>
-					-->
+					<li id="fileOpen">&nbsp; Open</li>
+					<li id="fileSave">&nbsp; Save</li>
+					<li id="fileExport">&nbsp; Export</li>
+					<li id="fileExit">&nbsp; Exit</li>
+				</ul>
+			</li>
+			<li>View
+				<ul>
+					<li id="viewCanvasGrid"><span class="hidden">&#10004;</span> Canvas Grid</li>
+					<li id="viewSpriteSheetGrid"><span class="hidden">&#10004;</span> Sprite Sheet Grid</li>
 				</ul>
 			</li>
 			<li>Window
@@ -42,7 +47,8 @@
 			</li>
 			<li>Help
 				<ul>
-					<li id="helpAbout">&nbsp; About</li>
+					<li id="helpDocumentation">&nbsp; Documentation</lDi>
+					<li id="helpAbout">&nbsp; About</lDi>
 				</ul>
 			</li>
 		</ul>
@@ -135,7 +141,7 @@
 	<div id="popUp">
 		<div id="popUpWall"></div>
 		<div id="popUpWindow">
-			<span id="popUpClose">Close</span>
+			<span id="popUpClose" class="btn">X</span>
 			<div id="popUpContent"></div>
 		</div>
 	</div>

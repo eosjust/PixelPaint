@@ -15,15 +15,22 @@ body {
 }
 
 p {
-	text-align: center;
 	line-height: 22px;
 	border-bottom: none;
-	background-color: #000;
 }
 
 table {
 	border-collapse: collapse;
 	border-spacing: 0px;
+}
+
+.hidden {
+	visibility: hidden;
+}
+
+.label {
+	background-color: #000;
+	text-align: center;
 }
 
 /* menu */
@@ -50,19 +57,20 @@ table {
 	position: absolute;
 	left: 0px;
 	top: 22px;
+	padding: 4px 0;
 	background-color: #666;
 	display: none;
-	z-index: 10;
+	z-index: 50;
 }
 
 #menuWrapper li.selected ul {
 	display: block;
-	box-shadow: 6px 6px 6px #333;
+	box-shadow: 2px 2px 2px #000;
 }
 
 #menuWrapper li ul li {
 	display: block;
-	min-width: 140px;
+	min-width: 200px;
 }
 
 #menuWrapper li ul li:hover, #menuWrapper li ul li:hover span {
@@ -78,7 +86,7 @@ table {
 	border-top-right-radius: 5px;
 	border-bottom-left-radius: 5px;
 	border-bottom-right-radius: 5px;
-	box-shadow: 2px 2px 10px #000;
+	box-shadow: 2px 2px 2px #000;
 	left: 0px;
 	top: 20%;
 	z-index: 10;
@@ -138,7 +146,7 @@ table {
 
 #colorPalette {
 	position: absolute;
-	box-shadow: 2px 2px 10px #000;
+	box-shadow: 2px 2px 2px #000;
 	left: 58px;
 	top: -27px;
 	width: 384px;
@@ -185,7 +193,7 @@ table {
 #canvasWrapper, #previewWrapper {
 	border-top-left-radius: 5px;
 	border-top-right-radius: 5px;
-	box-shadow: 2px 2px 10px #000;
+	box-shadow: 2px 2px 2px #000;
 }
 
 #canvas, #preview {
@@ -207,22 +215,41 @@ table {
 }
 
 /* preview */
+
 #previewWrapper {
 	position: absolute;
 	left: 50%;
 	top: 50%;
 }
 
+.grid > div {
+	border: 1px solid #7ee3d3;
+	margin: -1px;
+}
+
 #preview:hover > div {
-	opacity: .5;
+	border: 1px solid #7ee3d3;
+	margin: -1px;
+}
+
+#preview:hover > div > div {
+	opacity: .4;
+}
+
+#preview:hover > div {
+	box-shadow: inset 0 0 200px rgb(219, 66, 38);
 }
 
 #preview:hover > div.selected {
-	opacity: .8;
+	box-shadow: inset 0 0 200px rgb(0, 156, 84);
+}
+
+#preview:hover > div.current {
+
 }
 
 #preview > div:hover, #preview > div.selected:hover {
-	opacity: 1;
+	box-shadow: inset 0 0 200px yellow;
 }
 
 /* pop up */
@@ -239,52 +266,44 @@ table {
 #popUpWall {
 	width: 100%;
 	height: 100%;
-	background-color: #333;
-	opacity: .5;
+	background-color: #000;
+	opacity: .7;
 }
 
 #popUpWindow {
 	position: absolute;
 	width: 600px;
 	min-height: 100px;
-	background-color: #ccc;
-	border: 1px solid #333;
-	border-radius: 5px;
+	background-color: #666;
+	box-shadow: 2px 2px 2px #000;
 	left: 50%;
 	top: 40%;
 	margin-left: -300px;
 }
 
 #popUpClose {
-	color: #000;
 	position: absolute;
 	right: 5px;
 	top: 5px;
-	padding: 5px 10px;
-	background-color: #eee;
-	border: 1px solid #333;
-	border-radius: 5px;
 }
 
-#popUpClose:hover, #popUpSubmit:hover {
-	color: #ddd;
-	background-color: #666;
+.btn {
+	padding: 5px 10px;
+	background-color: #333;
+	border: 1px solid #333;
+}
+
+.btn:hover {
+	color: #000;
+	background-color: #999;
 	cursor: pointer;
 }
 
 #popUpContent {
-	color: #000;
-	width: 700px;
 	padding: 30px 50px;
 }
 
-#popUpContent h2 {
-	color: #000;
-	margin-bottom: 20px;
-}
-
 #popUpContent span {
-	color: #000;
 	width: 90px;
 	line-height: 22px;
 	margin-left: 70px;
@@ -292,29 +311,18 @@ table {
 	text-align: right;
 }
 
-#popUpContent span strong, #popUpContent strong, #popUpContent a {
-	color: #000;
-}
-
 #popUpContent input {
 	color: #000;
 	border: 1px solid #333;
 }
+
 #popUpContent input[type='text'] {
 	padding-left: 6px;
 }
 
-#popUpSubmit {
-	padding: 5px 20px;
-	border-radius: 5px;
-	margin-left: 215px;
-	margin-top: 10px;
-}
-
-#popUpContent #popUpSumbit:hover { 
-	color: #ddd;
-	background-color: #666;
-	cursor: pointer;
+#popUpContent #popUpSubmit {
+	text-align: center;
+	margin-left: 200px;
 }
 
 /* colors */
