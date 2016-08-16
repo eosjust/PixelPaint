@@ -1,149 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>NES Paint</title>
+	<title>Pixel Paint</title>
 	<meta charset="UTF-8">
-	<link rel="stylesheet" type="text/css" href="style.css">
-	<script src="./scripts/jquery-2.1.1.min.js"></script>
-	<script src="./scripts/jquery-ui-1.10.4.custom.min.js"></script>
-	<script src="./scripts/nesPaint.js"></script>
+	<link rel="stylesheet" type="text/css" href="./css/main.css"/>
+	<script src="./js/app.js"></script>
 </head>
 <body>
-	<div id="right">
-		<div id="previewWrapper">
-			<p class="label">Sprite Sheet</p>
-			<div id="preview"></div>
+	<ul id="menu">
+		<li>File
+			<ul>
+				<li data-value="new">New</li>
+				<li data-value="export">Export</li>
+			</ul>
+		</li>
+		<li>Image
+			<ul>
+				<li data-value="pixelSize">Pixel Size</li>
+			</ul>
+		</li>
+		<li>Window
+			<ul>
+				<li data-value="tools"><span>&#10004;</span>Tools</li>
+				<li data-value="canvas"><span>&#10004;</span>Canvas</li>
+			</ul>
+		</li>
+		<li>Help
+			<ul>
+				<li data-value="about">About</li>
+			</ul>
+		</li>
+	</ul>
+	<div id="tools">
+		<div id="draw" class="selected"></div>
+		<div id="erase"></div>
+		<div id="smudge"></div>
+		<div id="fill"></div>
+		<div id="eyedrop"></div>
+		<div id="color">
+			<table id="colorPanel">
+				<tr>
+					<td class="c00"><span>00</span></td>
+					<td class="c01"><span>01</span></td>
+					<td class="c02"><span>02</span></td>
+					<td class="c03"><span>03</span></td>
+					<td class="c04"><span>04</span></td>
+					<td class="c05"><span>05</span></td>
+					<td class="c06"><span>06</span></td>
+					<td class="c07"><span>07</span></td>
+					<td class="c08"><span>08</span></td>
+					<td class="c09"><span>09</span></td>
+					<td class="c0A"><span>0A</span></td>
+					<td class="c0B"><span>0B</span></td>
+					<td class="c0C"><span>0C</span></td>
+					<td class="c0D"><span>0D</span></td>
+					<td class="c0E"><span>0E</span></td>
+					<td class="c0F"><span>0F</span></td>
+				</tr>
+				<tr>
+					<td class="c10">10</td>
+					<td class="c11">11</td>
+					<td class="c12">12</td>
+					<td class="c13">13</td>
+					<td class="c14">14</td>
+					<td class="c15">15</td>
+					<td class="c16">16</td>
+					<td class="c17">17</td>
+					<td class="c18">18</td>
+					<td class="c19">19</td>
+					<td class="c1A">1A</td>
+					<td class="c1B">1B</td>
+					<td class="c1C">1C</td>
+					<td class="c1D"><span>1D</span></td>
+					<td class="c1E"><span>1E</span></td>
+					<td class="c1F"><span>1F</span></td>
+				</tr>
+				<tr>
+					<td class="c20">20</td>
+					<td class="c21">21</td>
+					<td class="c22">22</td>
+					<td class="c23">23</td>
+					<td class="c24">24</td>
+					<td class="c25">25</td>
+					<td class="c26">26</td>
+					<td class="c27">27</td>
+					<td class="c28">28</td>
+					<td class="c29">29</td>
+					<td class="c2A">2A</td>
+					<td class="c2B">2B</td>
+					<td class="c2C">2C</td>
+					<td class="c2D"><span>2D</span></td>
+					<td class="c2E"><span>2E</span></td>
+					<td class="c2F"><span>2F</span></td>
+				</tr>
+				<tr>
+					<td class="c30">30</td>
+					<td class="c31">31</td>
+					<td class="c32">32</td>
+					<td class="c33">33</td>
+					<td class="c34">34</td>
+					<td class="c35">35</td>
+					<td class="c36">36</td>
+					<td class="c37">37</td>
+					<td class="c38">38</td>
+					<td class="c39">39</td>
+					<td class="c3A">3A</td>
+					<td class="c3B">3B</td>
+					<td class="c3C">3C</td>
+					<td class="c3D">3D</td>
+					<td class="c3E"><span>3E</span></td>
+					<td class="c3F"><span>3F</span></td>
+				</tr>
+			</table>
 		</div>
 	</div>
-	<div id="left">
-		<div id="canvasWrapper">
-			<p class="label">Canvas</p>
-			<div id="canvas"></div>
+	<div id="canvas"></div>
+	<div id="modal" class="hidden">
+		<div id="closeModal">X</div>
+		<div id="newCanvas" class="hidden">
+			<p>name <input id="canvas-name" type="text" /></p>
+			<p>width <input id="canvas-width" type="number" /></p>
+			<p>height <input id="canvas-height" type="number" /></p>
+			<p>pixel size <input id="canvas-pixelSize" type="number" /></p>
+			<span id="newSubmit" class="btn select">make</span>
+			<span id="newCancel" class="btn cancel">cancel</span>
+		</div>
+		<div id="pixelSize" class="hidden">
+			<p>pixel size <input id="pixelSize-pixelSize" type="number" /></p>
+			<span id="pixelSizeSubmit" class="btn select">update</span>
+			<span id="pixelSizeCancel" class="btn cancel">cancel</span>
+		</div>
+		<div id="about" class="hidden">
+			<h2>Pixel Paint</h2>
+			<p>version 0.2</p>
+			<p>demo <a href="http://robertmermet.com/projects/pixelpaint" target="_blank">robertmermet.com/projects/pixelpaint</a></p>
+			<p>clone <a href="https://github.com/robertmermet/pixelpaint" target="_blank">github.com/robertmermet/pixelpaint</a></p>
+			<p>author <a href="http://robertmermet.com" target="_blank">Robert Mermet</a></p>
 		</div>
 	</div>
-	<div id="menuWrapper">
-		<ul id="menu">
-			<li>File
-				<ul>
-					<li id="fileNew">&nbsp; New</li>
-					<li id="fileOpen">&nbsp; Open</li>
-					<li id="fileSave">&nbsp; Save</li>
-					<li id="fileExport">&nbsp; Export</li>
-					<li id="fileExit">&nbsp; Exit</li>
-				</ul>
-			</li>
-			<li>View
-				<ul>
-					<li id="viewCanvasGrid"><span class="hidden">&#10004;</span> Canvas Grid</li>
-					<li id="viewSpriteSheetGrid"><span class="hidden">&#10004;</span> Sprite Sheet Grid</li>
-				</ul>
-			</li>
-			<li>Window
-				<ul>
-					<li id="windowTools"><span>&#10004;</span> Tools</li>
-					<li id="windowCanvas"><span>&#10004;</span> Canvas</li>
-					<li id="windowPreview"><span>&#10004;</span> Preview</li>
-				</ul>
-			</li>
-			<li>Help
-				<ul>
-					<li id="helpDocumentation">&nbsp; Documentation</lDi>
-					<li id="helpAbout">&nbsp; About</lDi>
-				</ul>
-			</li>
-		</ul>
-	</div>
-	<div id="toolsWrapper">
-		<p class="label">Tools</p>
-		<div id="tools">
-			<div id="pencil" class="tool"></div>
-			<div id="eraser" class="tool"></div>
-			<div id="smudge" class="tool"></div>
-			<div id="fill" class="tool"></div>
-			<div id="eyedrop" class="tool"></div>
-			<div id="currentColor"></div>	
-		</div>
-		<table id="colorPalette">
-			<tr>
-				<td class="c00" style="border-top-left-radius: 4px"><span>00</span></td>
-				<td class="c01"><span>01</span></td>
-				<td class="c02"><span>02</span></td>
-				<td class="c03"><span>03</span></td>
-				<td class="c04"><span>04</span></td>
-				<td class="c05"><span>05</span></td>
-				<td class="c06"><span>06</span></td>
-				<td class="c07"><span>07</span></td>
-				<td class="c08"><span>08</span></td>
-				<td class="c09"><span>09</span></td>
-				<td class="c0A"><span>0A</span></td>
-				<td class="c0B"><span>0B</span></td>
-				<td class="c0C"><span>0C</span></td>
-				<td class="c0D"><span>0D</span></td>
-				<td class="c0E"><span>0E</span></td>
-				<td class="c0F" style="border-top-right-radius: 4px"><span>0F</span></td>
-			</tr>
-			<tr>
-				<td class="c10">10</td>
-				<td class="c11">11</td>
-				<td class="c12">12</td>
-				<td class="c13">13</td>
-				<td class="c14">14</td>
-				<td class="c15">15</td>
-				<td class="c16">16</td>
-				<td class="c17">17</td>
-				<td class="c18">18</td>
-				<td class="c19">19</td>
-				<td class="c1A">1A</td>
-				<td class="c1B">1B</td>
-				<td class="c1C">1C</td>
-				<td class="c1D"><span>1D</span></td>
-				<td class="c1E"><span>1E</span></td>
-				<td class="c1F"><span>1F</span></td>
-			</tr>
-			<tr>
-				<td class="c20">20</td>
-				<td class="c21">21</td>
-				<td class="c22">22</td>
-				<td class="c23">23</td>
-				<td class="c24">24</td>
-				<td class="c25">25</td>
-				<td class="c26">26</td>
-				<td class="c27">27</td>
-				<td class="c28">28</td>
-				<td class="c29">29</td>
-				<td class="c2A">2A</td>
-				<td class="c2B">2B</td>
-				<td class="c2C">2C</td>
-				<td class="c2D"><span>2D</span></td>
-				<td class="c2E"><span>2E</span></td>
-				<td class="c2F"><span>2F</span></td>
-			</tr>
-			<tr>
-				<td class="c30" style="border-bottom-left-radius: 4px">30</td>
-				<td class="c31">31</td>
-				<td class="c32">32</td>
-				<td class="c33">33</td>
-				<td class="c34">34</td>
-				<td class="c35">35</td>
-				<td class="c36">36</td>
-				<td class="c37">37</td>
-				<td class="c38">38</td>
-				<td class="c39">39</td>
-				<td class="c3A">3A</td>
-				<td class="c3B">3B</td>
-				<td class="c3C">3C</td>
-				<td class="c3D">3D</td>
-				<td class="c3E"><span>3E</span></td>
-				<td class="c3F" style="border-bottom-right-radius: 4px"><span>3F</span></td>
-			</tr>
-		</table>
-	</div>
-	<div id="popUp">
-		<div id="popUpWall"></div>
-		<div id="popUpWindow">
-			<span id="popUpClose" class="btn">X</span>
-			<div id="popUpContent"></div>
-		</div>
-	</div>
+	<div id="spacer"></div>
 </body>
 </html>
