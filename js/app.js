@@ -377,8 +377,6 @@ window.addEventListener('load', function load() {
 
 		var pixelSize = document.getElementById('pixelSize-pixelSize').value;
 
-		app.data.update();
-
 		app.file.canvas.pixelSize = (pixelSize > 1) ? pixelSize : 1;
 
 		app.canvas.create();
@@ -560,6 +558,8 @@ window.addEventListener('load', function load() {
 		// mouse up canvas event
 
 		canvas.onmouseup = function(event) {
+
+			app.data.update();
 
 			// update undo state
 			/*
