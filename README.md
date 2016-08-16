@@ -1,9 +1,11 @@
-Pixel Paint 0.2
+# Pixel Paint
 
 browser-based sprite editor
 
-demo    robertmermet.com/projects/pixelPaint
+    git clone git@github.com:robertmermet/pixelPaint.git
 
-clone   git@github.com:robertmermet/pixelPaint.git
+> version 0.2
 
-author  robetrmermet.com
+>**demo** [robertmermet.com/projects/pixelPaint](http://robertmermet.com/projects/pixelPaint)
+
+>**author** [Robert Mermet](http://robertmermet.com)
