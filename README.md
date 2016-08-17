@@ -4,8 +4,8 @@
 
 browser-based sprite editor
 
-    git clone git@github.com:robertmermet/pixelPaint.git
+    git clone git@github.com:robertmermet/pixelpaint.git
 
->**demo** [robertmermet.com/projects/pixelPaint](http://robertmermet.com/projects/pixelPaint)
+>**demo** [robertmermet.com/projects/pixelpaint](http://robertmermet.com/projects/pixelpaint)
 
 >**author** [robertmermet.com](http://robertmermet.com)
