@@ -98,7 +98,12 @@ body {
 	width: 32px;
 	height: 32px;
 	margin: 8px 6px;
+	border-radius: 5px;
 	cursor: pointer;
+}
+
+#tools > div:hover {
+	background-color: #333;
 }
 
 #draw, #erase, #smudge, #fill, #eyedrop {
@@ -106,24 +111,40 @@ body {
 	background-size: 64px 160px;
 }
 
+#draw.selected {
+	background-position: 32px 0;
+}
+
 #erase {
 	background-position: 0px -32px;
+}
+
+#erase.selected {
+	background-position: 32px -32px;
 }
 
 #smudge {
 	background-position: 0px -64px;
 }
 
+#smudge.selected {
+	background-position: 32px -64px;
+}
+
 #fill {
 	background-position: 0px -96px;
+}
+
+#fill.selected {
+	background-position: 32px -96px;
 }
 
 #eyedrop {
 	background-position: 0px 32px;
 }
 
-#tools > div.selected {
-	background-position-x: 32px;
+#eyedrop.selected {
+	background-position: 32px 32px;
 }
 
 #colorPanel {

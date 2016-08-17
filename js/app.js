@@ -8,7 +8,7 @@
 // --------+-------------------------------------
 //  author | robert mermet
 // --------+-------------------------------------
-//    site | robertmermet.com/projects/pixelPaint
+//    demo | robertmermet.com/projects/pixelPaint
 // --------+-------------------------------------
 //   git@github.com:robertmermet/pixelPaint.git
 //
@@ -246,16 +246,20 @@ window.addEventListener('load', function load() {
 	// undo
 
 	app.menu.undo = function() {
-		app.state.undo.index = (app.state.undo.index - 1) >= 0 ? app.state.undo.index - 1 : 0;
-		app.file.data = app.state.undo.array[app.state.undo.index];
-		app.data.load();
+
+		if (app.state.undo.index > 0) {
+
+			app.state.undo.index--;
+			app.file.data = app.state.undo.array[app.state.undo.index];
+			app.data.load();
+		}
 	};
 
 	// redo
 
 	app.menu.redo = function() {
 
-		if (app.state.undo.index < 4) {
+		if (app.state.undo.index < 4 && app.state.undo.index + 1 < app.state.undo.array.length) {
 
 			app.state.undo.index++;
 			app.file.data = app.state.undo.array[app.state.undo.index];
@@ -280,6 +284,8 @@ window.addEventListener('load', function load() {
 	// view canvas grid
 
     app.menu.grid = function() {
+
+		// TODO
 
     };
 
@@ -559,20 +565,23 @@ window.addEventListener('load', function load() {
 
 		canvas.onmouseup = function(event) {
 
+			// update data
+
 			app.data.update();
 
 			// update undo state
-			/*
-			app.state.undo.array.push(app.file.data);
-			app.state.undo.array.shift();
 
-			switch (app.state.undo.index) {
-				case 4:
-					break;
-				default:
-					app.state.undo.index++;
+			if (app.state.undo.index < 4) {
+
+				app.state.undo.index++;
+				app.state.undo.array.splice(app.state.undo.index, 1, app.file.data);
+				app.state.undo.array.splice(app.state.undo.index + 1);
+
+			} else {
+
+				app.state.undo.array.shift();
+				app.state.undo.array.push(app.file.data);
 			}
-			*/
 		}
 	};
 
@@ -601,7 +610,6 @@ window.addEventListener('load', function load() {
 			pixelY = Math.floor(y / pizelSize) * pizelSize;
 
 		app.tools[app.state.tool](pixelX, pixelY);
-		// app.data.update();
 	};
 
 
@@ -616,8 +624,8 @@ window.addEventListener('load', function load() {
 
 	app.canvas.offset = function(canvasWidth, canvasHeight) {
 
-		var offsetMin = 8;
-		var offsetWidth = (cache.toolbar.className === 'hidden') ? 0 : 22;
+		var offsetMin = 8,
+			offsetWidth = (cache.toolbar.className === 'hidden') ? 0 : 22;
 
 		// width offset
 
@@ -704,8 +712,8 @@ window.addEventListener('load', function load() {
 		}
 
 		app.tools.changeColor(app.state.color);
-
 		app.canvas.create();
+
 	}());
 
 }, true);
