@@ -78,10 +78,8 @@ window.addEventListener('load', function load() {
 
 		app.state.mouseDown = true;
 
-		if (app.state.menuOver === false) {
-
+		if (app.state.menuOver === false)
 			app.menu.close();
-		}
 
 		// TODO
 		/*
@@ -119,7 +117,6 @@ window.addEventListener('load', function load() {
 			for (var j = 0; j < app.file.canvas.width; j++) {
 
 				var pixelColor = app.canvas.ctx.getImageData((j * pixelSize) + 1, (i * pixelSize) + 1, 1, 1).data;
-
 				row.push('rgba(' + pixelColor[0] + ', ' + pixelColor[1] + ', ' + pixelColor[2] + ', ' + pixelColor[3] + ')');
 			}
 
@@ -195,10 +192,8 @@ window.addEventListener('load', function load() {
 
 		if (app.state.menuDown === true) {
 
-			for (var i = 0; i < cache.menu.length; i++) {
-
+			for (var i = 0; i < cache.menu.length; i++)
 				cache.menu[i].className = '';
-			}
 
 			this.className = 'selected';
 		}
@@ -213,10 +208,8 @@ window.addEventListener('load', function load() {
 
 	app.menu.close = function () {
 
-		for (var i = 0; i < cache.menu.length; i++) {
-
+		for (var i = 0; i < cache.menu.length; i++)
 			cache.menu[i].className = '';
-		}
 
 		app.state.menuDown = false;
 	};
@@ -240,15 +233,36 @@ window.addEventListener('load', function load() {
 		app.modal.open('newCanvas');
 	};
 
+	// open json
+
+	app.menu.open = function() {
+
+
+
+	};
+
+	// save json
+
+	app.menu.save = function() {
+
+		var download = document.createElement('a'),
+			file = encodeURIComponent(JSON.stringify(app.file));
+
+		download.setAttribute('href', 'data:text/plain;charset=utf-8,' + file);
+		download.setAttribute('download', app.file.canvas.name + '.json');
+		download.click();
+	};
+
 	// export png
 
 	app.menu.export = function() {
 
 		var download = document.createElement('a'),
-			canvas = cache.canvas.getElementsByTagName('canvas')[0];
+			canvas = cache.canvas.getElementsByTagName('canvas')[0],
+			file = canvas.toDataURL('image/png');
 
-		download.href = canvas.toDataURL('image/png');
-		download.download = app.file.canvas.name + '.png';
+		download.setAttribute('href', file);
+		download.setAttribute('download', app.file.canvas.name + '.png');
 		download.click();
 	};
 
@@ -319,14 +333,10 @@ window.addEventListener('load', function load() {
 
 		var checkbox = this.getElementsByTagName('span')[0];
 
-        if (cache.toolbar.className === '') {
-
+        if (cache.toolbar.className === '')
             cache.toolbar.className = checkbox.className = 'hidden';
-
-        } else {
-
+        else
             cache.toolbar.className = checkbox.className = '';
-        }
 
 		app.canvas.offset(cache.canvas.offsetWidth, cache.canvas.offsetHeight);
     };
@@ -396,6 +406,11 @@ window.addEventListener('load', function load() {
 		app.file.canvas.width = (width > 2) ? width : 2;
 		app.file.canvas.height = (height > 2) ? height : 2;
 		app.file.canvas.pixelSize = (pixelSize > 1) ? pixelSize : 1;
+		app.file.data = null;
+		app.state.undo = {
+			array : [],
+			index : 0
+		};
 
 		app.canvas.create();
 		app.modal.close();
@@ -414,6 +429,24 @@ window.addEventListener('load', function load() {
 		app.modal.close();
 	};
 
+	// text inputs
+
+	app.modal.txtInput = function() {
+
+		if (this.value === '')
+			this.value = 'untitled';
+	};
+
+	// number inputs
+
+	app.modal.numInput = function() {
+
+		var minNum = parseInt(this.getAttribute('min'));
+
+		if (this.value < minNum)
+			this.value = minNum;
+	};
+
 
 	///////////
 	// tools //
@@ -428,10 +461,8 @@ window.addEventListener('load', function load() {
 
 			app.state.tool = selectedId;
 
-			for (var i = 0; i < cache.tools.length; i++) {
-
+			for (var i = 0; i < cache.tools.length; i++)
 				cache.tools[i].className = '';
-			}
 
 			this.className = 'selected';
 
@@ -444,14 +475,10 @@ window.addEventListener('load', function load() {
 
 	app.tools.colorPanel = function() {
 
-		if (cache.panel.className === 'selected') {
-
+		if (cache.panel.className === 'selected')
 			cache.panel.className = '';
-
-		} else {
-
+		else
 			cache.panel.className = 'selected';
-		}
 	};
 
 
@@ -465,14 +492,10 @@ window.addEventListener('load', function load() {
 
 	app.tools.changeColor = function(color) {
 
-		if (color) {
-
+		if (color)
 			cache.color.style.backgroundColor = color;
-
-		} else {
-
+		else
 			cache.color.style.backgroundColor = 'transparent';
-		}
 
 		app.state.color = color;
 	};
@@ -500,14 +523,10 @@ window.addEventListener('load', function load() {
 
 	app.tools.smudge = function(x, y) {
 
-		if (app.state.colorCache) {
-
+		if (app.state.colorCache)
 			app.tools.draw(x, y, app.state.colorCache);
-
-		} else {
-
+		else
 			app.tools.erase(x, y);
-		}
 	};
 
 	// fill
@@ -569,6 +588,11 @@ window.addEventListener('load', function load() {
 		if (app.state.undo.array.length === 0)
 			app.state.undo.array = [app.file.data];
 
+		// draw grid
+
+		if (app.state.grid)
+			app.canvas.grid();
+
 		// mouse down canvas event
 
 		canvas.onmousedown = function(event) {
@@ -580,10 +604,8 @@ window.addEventListener('load', function load() {
 
 		canvas.onmousemove = function(event) {
 
-			if (app.state.mouseDown) {
-
+			if (app.state.mouseDown)
 				app.canvas.update(event.clientX, event.clientY, false);
-			}
 		};
 
 		// mouse up canvas event
@@ -667,10 +689,8 @@ window.addEventListener('load', function load() {
 
 			app.canvas.ctx.fillRect(0, i * pixelSize - 1, width, 2);
 
-			for (var j = 0; j < app.file.canvas.width + 1; j++) {
-
+			for (var j = 0; j < app.file.canvas.width + 1; j++)
 				app.canvas.ctx.fillRect(j * pixelSize - 1, 0, 2, width);
-			}
 		}
 	};
 
@@ -751,19 +771,30 @@ window.addEventListener('load', function load() {
 		document.getElementById('pixelSizeSubmit').onmouseup = app.modal.pixelSize;
 		document.getElementById('pixelSizeCancel').onmouseup = app.modal.close;
 
+		var txtInput = document.getElementsByClassName('txtInput'),
+			numInput = document.getElementsByClassName('numInput');
+
+		for (var i = 0; i < txtInput.length; i++) {
+
+			txtInput[i].onchange = app.modal.txtInput;
+			txtInput[i].onblur = app.modal.txtInput;
+		}
+
+		for (var i = 0; i < numInput.length; i++) {
+
+			numInput[i].onchange = app.modal.numInput;
+			numInput[i].onblur = app.modal.numInput;
+		}
+
 		// tool selection
 
-		for (var i = 0; i < cache.tools.length; i++) {
-
+		for (var i = 0; i < cache.tools.length; i++)
 			cache.tools[i].onmousedown = app.tools.select;
-		}
 
 		// color selection
 
-		for (var i = 0; i < cache.colors.length; i++) {
-
+		for (var i = 0; i < cache.colors.length; i++)
 			cache.colors[i].onmousedown = app.tools.colorSelect;
-		}
 
 		app.tools.changeColor(app.state.color);
 		app.canvas.create();

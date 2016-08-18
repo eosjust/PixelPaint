@@ -129,15 +129,15 @@
 	<div id="modal" class="hidden">
 		<div id="closeModal">X</div>
 		<div id="newCanvas" class="hidden">
-			<p>name <input id="canvas-name" type="text" /></p>
-			<p>width <input id="canvas-width" type="number" /></p>
-			<p>height <input id="canvas-height" type="number" /></p>
-			<p>pixel size <input id="canvas-pixelSize" type="number" /></p>
+			<p>name <input id="canvas-name" class="txtInput" type="text" /></p>
+			<p>width <input id="canvas-width" class="numInput" type="number" min="2" /></p>
+			<p>height <input id="canvas-height" class="numInput" type="number" min="2" /></p>
+			<p>pixel size <input id="canvas-pixelSize" class="numInput" type="number" min="1" /></p>
 			<span id="newSubmit" class="btn select">make</span>
 			<span id="newCancel" class="btn cancel">cancel</span>
 		</div>
 		<div id="pixelSize" class="hidden">
-			<p>pixel size <input id="pixelSize-pixelSize" type="number" /></p>
+			<p>pixel size <input id="pixelSize-pixelSize" class="numInput" type="number" min="1" /></p>
 			<span id="pixelSizeSubmit" class="btn select">update</span>
 			<span id="pixelSizeCancel" class="btn cancel">cancel</span>
 		</div>
