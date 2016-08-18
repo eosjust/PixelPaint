@@ -8,9 +8,9 @@
 // --------+-------------------------------------
 //  author | robert mermet
 // --------+-------------------------------------
-//    demo | robertmermet.com/projects/pixelPaint
+//    demo | robertmermet.com/projects/pixelpaint
 // --------+-------------------------------------
-//   git@github.com:robertmermet/pixelPaint.git
+//   git@github.com:robertmermet/pixelpaint.git
 //
 
 window.addEventListener('load', function load() {
@@ -57,12 +57,14 @@ window.addEventListener('load', function load() {
 		menuOver	: false,
 		menuDown	: false,
         toolOver	: false,
-		color		: 'rgb(0, 88, 248)',
+		pixelSize   : null,
+		color		: 'rgb(0, 120, 248)',
 		colorCache	: null,
 		tool		: 'draw',
+		grid		: false,
 		undo		: {
 			array : [],
-			index : 4,
+			index : 0
 		}
 	};
 
@@ -78,7 +80,7 @@ window.addEventListener('load', function load() {
 
 		if (app.state.menuOver === false) {
 
-            app.menu.close();
+			app.menu.close();
 		}
 
 		// TODO
@@ -116,7 +118,7 @@ window.addEventListener('load', function load() {
 
 			for (var j = 0; j < app.file.canvas.width; j++) {
 
-				var pixelColor = app.canvas.ctx.getImageData((j * pixelSize), (i * pixelSize), 1, 1).data;
+				var pixelColor = app.canvas.ctx.getImageData((j * pixelSize) + 1, (i * pixelSize) + 1, 1, 1).data;
 
 				row.push('rgba(' + pixelColor[0] + ', ' + pixelColor[1] + ', ' + pixelColor[2] + ', ' + pixelColor[3] + ')');
 			}
@@ -143,9 +145,16 @@ window.addEventListener('load', function load() {
 				for (j = 0; j < app.file.canvas.width; j++) {
 
 					app.canvas.ctx.fillStyle = app.file.data[i][j];
-					app.canvas.ctx.fillRect((j * pixelSize), (i * pixelSize), pixelSize, pixelSize);
+
+					if (app.state.grid)
+						app.canvas.ctx.fillRect((j * pixelSize) + 1, (i * pixelSize) + 1, app.state.pixelSize, app.state.pixelSize);
+					else
+						app.canvas.ctx.fillRect((j * pixelSize), (i * pixelSize), pixelSize, pixelSize);
 				}
 			}
+
+			if (app.state.grid)
+				app.canvas.grid();
 		}
 	};
 
@@ -285,8 +294,23 @@ window.addEventListener('load', function load() {
 
     app.menu.grid = function() {
 
-		// TODO
+		var checkbox = this.getElementsByTagName('span')[0];
 
+		if (app.state.grid === false) {
+
+			app.state.grid = true;
+			checkbox.className = '';
+			app.state.pixelSize -= 2;
+			app.canvas.grid();
+
+		} else {
+
+			app.state.grid = false;
+			checkbox.className = 'hidden';
+			app.state.pixelSize += 2;
+			app.data.load();
+
+		}
     };
 
 	// view tools
@@ -438,6 +462,7 @@ window.addEventListener('load', function load() {
 	};
 
 
+
 	app.tools.changeColor = function(color) {
 
 		if (color) {
@@ -452,6 +477,7 @@ window.addEventListener('load', function load() {
 		app.state.color = color;
 	};
 
+	// draw
 
 	app.tools.draw = function(x, y, color) {
 
@@ -459,16 +485,18 @@ window.addEventListener('load', function load() {
 
 			app.tools.erase(x, y);
 			app.canvas.ctx.fillStyle = color ? color : app.state.color;
-			app.canvas.ctx.fillRect(x, y, app.file.canvas.pixelSize, app.file.canvas.pixelSize);
+			app.canvas.ctx.fillRect(x, y, app.state.pixelSize, app.state.pixelSize);
 		}
 	};
 
+	// erase
 
 	app.tools.erase = function(x, y) {
 
-		app.canvas.ctx.clearRect(x, y, app.file.canvas.pixelSize, app.file.canvas.pixelSize);
+		app.canvas.ctx.clearRect(x, y, app.state.pixelSize, app.state.pixelSize);
 	};
 
+	// smudge
 
 	app.tools.smudge = function(x, y) {
 
@@ -482,6 +510,7 @@ window.addEventListener('load', function load() {
 		}
 	};
 
+	// fill
 
 	app.tools.fill = function(x, y) {
 
@@ -499,13 +528,12 @@ window.addEventListener('load', function load() {
 		app.data.load();
 	};
 
+	// eyedrop
 
 	app.tools.eyedrop = function(x, y) {
 
-		if (app.state.colorCache) {
-
+		if (app.state.colorCache)
 			app.tools.changeColor(app.state.colorCache);
-		}
 	};
 
 
@@ -531,18 +559,15 @@ window.addEventListener('load', function load() {
 
 		// update data
 
+		app.state.pixelSize = app.state.grid ? app.file.canvas.pixelSize - 2 : app.file.canvas.pixelSize;
+
 		if (app.file.data === null)
 			app.data.update();
 
-		// undo array default
+		// create default undo-array
 
-		if (app.state.undo.array.length === 0) {
-
-			for (var i = 0; i < 5; i++) {
-
-				app.state.undo.array[i] = app.file.data;
-			}
-		}
+		if (app.state.undo.array.length === 0)
+			app.state.undo.array = [app.file.data];
 
 		// mouse down canvas event
 
@@ -571,47 +596,54 @@ window.addEventListener('load', function load() {
 
 			// update undo state
 
-			if (app.state.undo.index < 4) {
+			if (app.state.tool !== 'eyedrop') {
 
-				app.state.undo.index++;
-				app.state.undo.array.splice(app.state.undo.index, 1, app.file.data);
-				app.state.undo.array.splice(app.state.undo.index + 1);
+				if (app.state.undo.index < 4) {
 
-			} else {
+					app.state.undo.index++;
+					app.state.undo.array.splice(app.state.undo.index, 1, app.file.data);
+					app.state.undo.array.splice(app.state.undo.index + 1);
 
-				app.state.undo.array.shift();
-				app.state.undo.array.push(app.file.data);
+				} else {
+
+					app.state.undo.array.shift();
+					app.state.undo.array.push(app.file.data);
+				}
 			}
 		}
 	};
 
+	// update canvas
 
 	app.canvas.update = function(x, y, clickEvent) {
 
 		x -= cache.canvas.offsetLeft;
 		y -= cache.canvas.offsetTop;
 
-		if (clickEvent) {
+        var pixelSize = app.file.canvas.pixelSize,
+            cols = Math.floor(x / pixelSize),
+            rows = Math.floor(y / pixelSize),
+            pixelX = cols * pixelSize,
+            pixelY = rows * pixelSize;
 
-			var rgb = app.canvas.ctx.getImageData(x, y, 1, 1).data;
+        if (clickEvent) {
 
-			if (rgb[3]) {
-
-				app.state.colorCache = 'rgba(' + rgb[0] + ', ' + rgb[1] + ', ' + rgb[2] + ', 255)';
-
-			} else {
-
+			if (app.file.data[rows][cols] !== 'rgba(0, 0, 0, 0)')
+				app.state.colorCache = app.file.data[rows][cols];
+			else
 				app.state.colorCache = null;
-			}
-		}
+        }
 
-		var pizelSize = app.file.canvas.pixelSize,
-			pixelX = Math.floor(x / pizelSize) * pizelSize,
-			pixelY = Math.floor(y / pizelSize) * pizelSize;
+		if (app.state.grid) {
+
+			pixelX++;
+			pixelY++;
+		}
 
 		app.tools[app.state.tool](pixelX, pixelY);
 	};
 
+	// clear canvas
 
 	app.canvas.clear = function() {
 
@@ -621,6 +653,28 @@ window.addEventListener('load', function load() {
 		app.canvas.ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 	};
 
+	// draw grid
+
+	app.canvas.grid = function() {
+
+		app.canvas.ctx.fillStyle = 'rgb(126, 227, 211)';
+
+		var pixelSize = app.file.canvas.pixelSize,
+			width = app.file.canvas.width * pixelSize,
+			height = app.file.canvas.height * pixelSize;
+
+		for (var i = 0; i < app.file.canvas.height + 1; i++) {
+
+			app.canvas.ctx.fillRect(0, i * pixelSize - 1, width, 2);
+
+			for (var j = 0; j < app.file.canvas.width + 1; j++) {
+
+				app.canvas.ctx.fillRect(j * pixelSize - 1, 0, 2, width);
+			}
+		}
+	};
+
+	// gen canvas offest
 
 	app.canvas.offset = function(canvasWidth, canvasHeight) {
 
