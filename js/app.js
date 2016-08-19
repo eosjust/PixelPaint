@@ -325,22 +325,21 @@ window.addEventListener('load', function load() {
 			checkbox.className = 'hidden';
 			app.state.pixelSize += 2;
 			app.data.load();
-
-		}
+        }
     };
 
 	// view tools
 
     app.menu.tools = function() {
 
-		var checkbox = this.getElementsByTagName('span')[0];
+        var checkbox = this.getElementsByTagName('span')[0];
 
         if (cache.toolbar.className === '')
             cache.toolbar.className = checkbox.className = 'hidden';
         else
             cache.toolbar.className = checkbox.className = '';
 
-		app.canvas.offset(cache.canvas.offsetWidth, cache.canvas.offsetHeight);
+        app.canvas.offset(cache.canvas.offsetWidth, cache.canvas.offsetHeight);
     };
 
 	// view canvas
@@ -349,22 +348,23 @@ window.addEventListener('load', function load() {
 
 		var checkbox = this.getElementsByTagName('span')[0];
 
-		if (cache.canvas.className === '') {
+        if (cache.canvas.className === '') {
 
             cache.canvas.className = checkbox.className = 'hidden';
 
         } else {
 
             cache.canvas.className = checkbox.className = '';
-			app.canvas.offset(cache.canvas.offsetWidth, cache.canvas.offsetHeight);
+            app.canvas.offset(cache.canvas.offsetWidth, cache.canvas.offsetHeight);
         }
     };
 
+    // about
 
-	app.menu.about = function() {
+    app.menu.about = function() {
 
-		app.modal.open('about');
-	};
+        app.modal.open('about');
+    };
 
 
 	///////////
