@@ -325,46 +325,46 @@ window.addEventListener('load', function load() {
 			checkbox.className = 'hidden';
 			app.state.pixelSize += 2;
 			app.data.load();
-        }
-    };
+		}
+	};
 
 	// view tools
 
-    app.menu.tools = function() {
-
-        var checkbox = this.getElementsByTagName('span')[0];
-
-        if (cache.toolbar.className === '')
-            cache.toolbar.className = checkbox.className = 'hidden';
-        else
-            cache.toolbar.className = checkbox.className = '';
-
-        app.canvas.offset(cache.canvas.offsetWidth, cache.canvas.offsetHeight);
-    };
-
-	// view canvas
-
-    app.menu.canvas = function() {
+	app.menu.tools = function() {
 
 		var checkbox = this.getElementsByTagName('span')[0];
 
-        if (cache.canvas.className === '') {
+		if (cache.toolbar.className === '')
+			cache.toolbar.className = checkbox.className = 'hidden';
+		else
+			cache.toolbar.className = checkbox.className = '';
 
-            cache.canvas.className = checkbox.className = 'hidden';
+			app.canvas.offset(cache.canvas.offsetWidth, cache.canvas.offsetHeight);
+	};
 
-        } else {
+	// view canvas
 
-            cache.canvas.className = checkbox.className = '';
-            app.canvas.offset(cache.canvas.offsetWidth, cache.canvas.offsetHeight);
-        }
-    };
+	app.menu.canvas = function() {
 
-    // about
+		var checkbox = this.getElementsByTagName('span')[0];
 
-    app.menu.about = function() {
+		if (cache.canvas.className === '') {
 
-        app.modal.open('about');
-    };
+			cache.canvas.className = checkbox.className = 'hidden';
+
+		} else {
+
+			cache.canvas.className = checkbox.className = '';
+			app.canvas.offset(cache.canvas.offsetWidth, cache.canvas.offsetHeight);
+		}
+	};
+
+	// about
+
+	app.menu.about = function() {
+
+		app.modal.open('about');
+	};
 
 
 	///////////
