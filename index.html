@@ -11,6 +11,8 @@
 		<li>File
 			<ul>
 				<li data-value="new">New</li>
+				<li data-value="open">Open</li>
+				<li data-value="save">Save</li>
 				<li data-value="export">Export</li>
 			</ul>
 		</li>
@@ -128,18 +130,33 @@
 	<div id="canvas"></div>
 	<div id="modal" class="hidden">
 		<div id="closeModal">X</div>
-		<div id="newCanvas" class="hidden">
+		<div id="newFile" class="hidden">
 			<p>name <input id="canvas-name" class="txtInput" type="text" /></p>
 			<p>width <input id="canvas-width" class="numInput" type="number" min="2" /></p>
 			<p>height <input id="canvas-height" class="numInput" type="number" min="2" /></p>
 			<p>pixel size <input id="canvas-pixelSize" class="numInput" type="number" min="1" /></p>
-			<span id="newSubmit" class="btn select">make</span>
-			<span id="newCancel" class="btn cancel">cancel</span>
+			<span id="newSubmit" class="btn select">new</span>
+			<span class="btn cancel">cancel</span>
+		</div>
+		<div id="openFile" class="hidden">
+			<p>file <input id="open-file" type="file" /></p>
+			<span id="openSubmit" class="btn select">open</span>
+			<span class="btn cancel">cancel</span>
+		</div>
+		<div id="saveFile" class="hidden">
+			<p>name <input id="save-file-name" class="txtInput" type="text" /></p>
+			<span id="saveSubmit" class="btn select">save</span>
+			<span class="btn cancel">cancel</span>
+		</div>
+		<div id="exportFile" class="hidden">
+			<p>name <input id="export-file-name" class="txtInput" type="text" /></p>
+			<span id="exportSubmit" class="btn select">export</span>
+			<span class="btn cancel">cancel</span>
 		</div>
 		<div id="pixelSize" class="hidden">
 			<p>pixel size <input id="pixelSize-pixelSize" class="numInput" type="number" min="1" /></p>
 			<span id="pixelSizeSubmit" class="btn select">update</span>
-			<span id="pixelSizeCancel" class="btn cancel">cancel</span>
+			<span class="btn cancel">cancel</span>
 		</div>
 		<div id="about" class="hidden">
 			<h2>Pixel Paint</h2>

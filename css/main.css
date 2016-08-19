@@ -245,9 +245,13 @@ body {
 	border-color:#fff;
 }
 
-#modal #newCanvas p, #modal #pixelSize p  {
+#modal #newFile p, #modal #openFile p, #modal #saveFile p, #modal #exportFile p, #modal #pixelSize p  {
 	width: 54%;
 	float: right;
+}
+
+#modal #openFile input {
+	width: 170px;
 }
 
 /* NES colors */

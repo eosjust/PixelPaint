@@ -218,7 +218,7 @@ window.addEventListener('load', function load() {
 
 	app.menu.new = function() {
 
-		var inputs = document.getElementById('newCanvas').getElementsByTagName('input');
+		var inputs = document.getElementById('newFile').getElementsByTagName('input');
 
 		// update form
 
@@ -230,40 +230,42 @@ window.addEventListener('load', function load() {
 
 		// open modal
 
-		app.modal.open('newCanvas');
+		app.modal.open('newFile');
 	};
 
 	// open json
 
 	app.menu.open = function() {
 
+		// open modal
 
-
+		app.modal.open('openFile');
 	};
 
 	// save json
 
 	app.menu.save = function() {
 
-		var download = document.createElement('a'),
-			file = encodeURIComponent(JSON.stringify(app.file));
+		// update form
 
-		download.setAttribute('href', 'data:text/plain;charset=utf-8,' + file);
-		download.setAttribute('download', app.file.canvas.name + '.json');
-		download.click();
+		document.getElementById('save-file-name').setAttribute('value', app.file.canvas.name);
+
+		// open modal
+
+		app.modal.open('saveFile');
 	};
 
 	// export png
 
 	app.menu.export = function() {
 
-		var download = document.createElement('a'),
-			canvas = cache.canvas.getElementsByTagName('canvas')[0],
-			file = canvas.toDataURL('image/png');
+		// update form
 
-		download.setAttribute('href', file);
-		download.setAttribute('download', app.file.canvas.name + '.png');
-		download.click();
+		document.getElementById('export-file-name').setAttribute('value', app.file.canvas.name);
+
+		// open modal
+
+		app.modal.open('exportFile');
 	};
 
 	// undo
@@ -306,7 +308,7 @@ window.addEventListener('load', function load() {
 
 	// view canvas grid
 
-    app.menu.grid = function() {
+	app.menu.grid = function() {
 
 		var checkbox = this.getElementsByTagName('span')[0];
 
@@ -388,14 +390,17 @@ window.addEventListener('load', function load() {
 
 	app.modal.hideAll = function() {
 
-		document.getElementById('newCanvas').className = 'hidden';
+		document.getElementById('newFile').className = 'hidden';
+		document.getElementById('openFile').className = 'hidden';
+		document.getElementById('saveFile').className = 'hidden';
+		document.getElementById('exportFile').className = 'hidden';
 		document.getElementById('pixelSize').className = 'hidden';
 		document.getElementById('about').className = 'hidden';
 	};
 
-	// make new canvas
+	// make new file
 
-	app.modal.newCanvas = function() {
+	app.modal.newFile = function() {
 
 		var name = document.getElementById('canvas-name').value,
 			width = document.getElementById('canvas-width').value,
@@ -416,6 +421,63 @@ window.addEventListener('load', function load() {
 		app.modal.close();
 	};
 
+	// open file
+
+	app.modal.openFile = function() {
+
+		var file = document.getElementById('open-file').files[0],
+			reader  = new FileReader();
+
+		if (file)
+    		reader.readAsText(file);
+
+		reader.onload = function() {
+
+			var data = JSON.parse(reader.result);
+
+			if (data.hasOwnProperty('canvas') && data.hasOwnProperty('data')) {
+
+				app.file = data;
+				app.canvas.create();
+				app.data.load();
+				app.modal.close();
+			}
+		};
+	};
+
+	// save file
+
+	app.modal.saveFile = function() {
+
+		var fileName = document.getElementById('save-file-name').value,
+			download = document.createElement('a');
+
+		app.file.canvas.name = fileName;
+
+		var file = encodeURIComponent(JSON.stringify(app.file));
+
+		download.setAttribute('href', 'data:text/plain;charset=utf-8,' + file);
+		download.setAttribute('download', app.file.canvas.name + '.json');
+		download.click();
+		app.modal.close();
+	};
+
+	// export file
+
+	app.modal.exportFile = function() {
+
+		var fileName = document.getElementById('export-file-name').value,
+			download = document.createElement('a'),
+			canvas = cache.canvas.getElementsByTagName('canvas')[0],
+			file = canvas.toDataURL('image/png');
+
+		app.file.canvas.name = fileName;
+		download.setAttribute('href', file);
+		download.setAttribute('download', app.file.canvas.name + '.png');
+		download.click();
+		app.modal.close();
+	};
+
 	// update pixel size
 
 	app.modal.pixelSize = function() {
@@ -423,7 +485,6 @@ window.addEventListener('load', function load() {
 		var pixelSize = document.getElementById('pixelSize-pixelSize').value;
 
 		app.file.canvas.pixelSize = (pixelSize > 1) ? pixelSize : 1;
-
 		app.canvas.create();
 		app.data.load();
 		app.modal.close();
@@ -472,6 +533,7 @@ window.addEventListener('load', function load() {
 		}
 	};
 
+	// open/close color panel
 
 	app.tools.colorPanel = function() {
 
@@ -481,6 +543,7 @@ window.addEventListener('load', function load() {
 			cache.panel.className = 'selected';
 	};
 
+	// select color
 
 	app.tools.colorSelect = function() {
 
@@ -488,7 +551,7 @@ window.addEventListener('load', function load() {
 		app.tools.changeColor(app.state.color);
 	};
 
-
+	// change color
 
 	app.tools.changeColor = function(color) {
 
@@ -766,24 +829,29 @@ window.addEventListener('load', function load() {
 		// modal
 
 		document.getElementById('closeModal').onmouseup = app.modal.close;
-		document.getElementById('newSubmit').onmouseup = app.modal.newCanvas;
-		document.getElementById('newCancel').onmouseup = app.modal.close;
+		document.getElementById('newSubmit').onmouseup = app.modal.newFile;
+		document.getElementById('openSubmit').onmouseup = app.modal.openFile;
+		document.getElementById('saveSubmit').onmouseup = app.modal.saveFile;
+		document.getElementById('exportSubmit').onmouseup = app.modal.exportFile;
 		document.getElementById('pixelSizeSubmit').onmouseup = app.modal.pixelSize;
-		document.getElementById('pixelSizeCancel').onmouseup = app.modal.close;
 
-		var txtInput = document.getElementsByClassName('txtInput'),
-			numInput = document.getElementsByClassName('numInput');
+		// modal cancel btn
 
-		for (var i = 0; i < txtInput.length; i++) {
+		var cancelBtn = cache.modal.getElementsByClassName('cancel');
 
-			txtInput[i].onchange = app.modal.txtInput;
-			txtInput[i].onblur = app.modal.txtInput;
-		}
+		for (var i = 0; i < cancelBtn.length; i++)
+			cancelBtn[i].onmouseup = app.modal.close;
 
-		for (var i = 0; i < numInput.length; i++) {
+		// modal input
 
-			numInput[i].onchange = app.modal.numInput;
-			numInput[i].onblur = app.modal.numInput;
+		var input = cache.modal.getElementsByTagName('input');
+
+		for (var i = 0; i < input.length; i++) {
+
+			var className = input[i].className;
+
+			input[i].onchange = app.modal[className];
+			input[i].onblur = app.modal[className];
 		}
 
 		// tool selection
