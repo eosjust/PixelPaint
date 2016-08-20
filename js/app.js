@@ -214,7 +214,7 @@ window.addEventListener('load', function load() {
 		app.state.menuDown = false;
 	};
 
-	// create new canvas
+	// create new file
 
 	app.menu.new = function() {
 
@@ -306,6 +306,20 @@ window.addEventListener('load', function load() {
 		app.modal.open('pixelSize');
 	};
 
+	// flip canvas horizontal
+
+	app.menu.flipCanvasHorizontal = function() {
+
+		app.canvas.flipCanvasHorizontal();
+	}
+
+	// flip canvas vertical
+
+	app.menu.flipCanvasVertical = function() {
+
+		app.canvas.flipCanvasVertical();
+	}
+
 	// view canvas grid
 
 	app.menu.grid = function() {
@@ -339,7 +353,7 @@ window.addEventListener('load', function load() {
 		else
 			cache.toolbar.className = checkbox.className = '';
 
-			app.canvas.offset(cache.canvas.offsetWidth, cache.canvas.offsetHeight);
+		app.canvas.offset(cache.canvas.offsetWidth, cache.canvas.offsetHeight);
 	};
 
 	// view canvas
@@ -429,7 +443,7 @@ window.addEventListener('load', function load() {
 			reader  = new FileReader();
 
 		if (file)
-    		reader.readAsText(file);
+			reader.readAsText(file);
 
 		reader.onload = function() {
 
@@ -596,6 +610,8 @@ window.addEventListener('load', function load() {
 
 	app.tools.fill = function(x, y) {
 
+		app.data.update();
+
 		var selectedColor = app.state.colorCache ? app.state.colorCache : 'rgba(0, 0, 0, 0)';
 
 		for (var row in app.file.data) {
@@ -736,6 +752,52 @@ window.addEventListener('load', function load() {
 			canvasHeight = app.file.canvas.pixelSize * app.file.canvas.height;
 
 		app.canvas.ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+	};
+
+	// flip canvas horizontal
+
+	app.canvas.flipCanvasHorizontal = function() {
+
+		app.data.update();
+
+		for (var i = 0; i < app.file.canvas.width; i++)
+			app.file.data[i].reverse();
+
+		if (app.state.undo.index < 4) {
+
+			app.state.undo.index++;
+			app.state.undo.array.splice(app.state.undo.index, 1, app.file.data);
+			app.state.undo.array.splice(app.state.undo.index + 1);
+
+		} else {
+
+			app.state.undo.array.shift();
+			app.state.undo.array.push(app.file.data);
+		}
+
+		app.data.load();
+	};
+
+	// flip canvas vertical
+
+	app.canvas.flipCanvasVertical = function() {
+
+		app.data.update();
+		app.file.data.reverse();
+
+		if (app.state.undo.index < 4) {
+
+			app.state.undo.index++;
+			app.state.undo.array.splice(app.state.undo.index, 1, app.file.data);
+			app.state.undo.array.splice(app.state.undo.index + 1);
+
+		} else {
+
+			app.state.undo.array.shift();
+			app.state.undo.array.push(app.file.data);
+		}
+
+		app.data.load();
 	};
 
 	// draw grid
