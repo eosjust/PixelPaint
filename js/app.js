@@ -83,10 +83,10 @@ window.addEventListener('load', function load() {
 
 		// TODO
 		/*
-        if (cache.panel.className === 'selected') {
+		if (cache.panel.className === 'selected') {
 
-            // cache.panel.className = '';
-        }
+			// cache.panel.className = '';
+		}
 		*/
 	};
 
@@ -205,8 +205,9 @@ window.addEventListener('load', function load() {
 		app.state.menuOver = false;
 	};
 
+	// close all menus
 
-	app.menu.close = function () {
+	app.menu.close = function() {
 
 		for (var i = 0; i < cache.menu.length; i++)
 			cache.menu[i].className = '';
@@ -306,18 +307,35 @@ window.addEventListener('load', function load() {
 		app.modal.open('pixelSize');
 	};
 
+	// flip canvas 180
+
+	app.menu.oneEighty = function() {
+
+		app.data.update();
+		app.canvas.flipCanvasHorizontal();
+		app.canvas.flipCanvasVertical();
+		app.canvas.undoArrayUpdate();
+		app.data.load();
+	};
+
 	// flip canvas horizontal
 
 	app.menu.flipCanvasHorizontal = function() {
 
+		app.data.update();
 		app.canvas.flipCanvasHorizontal();
+		app.canvas.undoArrayUpdate();
+		app.data.load();
 	}
 
 	// flip canvas vertical
 
 	app.menu.flipCanvasVertical = function() {
 
+		app.data.update();
 		app.canvas.flipCanvasVertical();
+		app.canvas.undoArrayUpdate();
+		app.data.load();
 	}
 
 	// view canvas grid
@@ -326,19 +344,19 @@ window.addEventListener('load', function load() {
 
 		var checkbox = this.getElementsByTagName('span')[0];
 
-		if (app.state.grid === false) {
-
-			app.state.grid = true;
-			checkbox.className = '';
-			app.state.pixelSize -= 2;
-			app.canvas.grid();
-
-		} else {
+		if (app.state.grid) {
 
 			app.state.grid = false;
 			checkbox.className = 'hidden';
 			app.state.pixelSize += 2;
 			app.data.load();
+
+		} else {
+
+			app.state.grid = true;
+			checkbox.className = '';
+			app.state.pixelSize -= 2;
+			app.canvas.grid();
 		}
 	};
 
@@ -649,6 +667,11 @@ window.addEventListener('load', function load() {
 		canvas.width = app.file.canvas.width * app.file.canvas.pixelSize;
 		canvas.height = app.file.canvas.height * app.file.canvas.pixelSize;
 
+		// resize menu/toolbar
+
+		document.getElementById('menu').style.minWidth = 44 + (8 * 2) + canvas.width + 'px';
+		cache.toolbar.style.minHeight = (8 * 2) + canvas.height + 'px';
+
 		// add canvas
 
 		cache.canvas.innerHTML = '';
@@ -699,17 +722,7 @@ window.addEventListener('load', function load() {
 
 			if (app.state.tool !== 'eyedrop') {
 
-				if (app.state.undo.index < 4) {
-
-					app.state.undo.index++;
-					app.state.undo.array.splice(app.state.undo.index, 1, app.file.data);
-					app.state.undo.array.splice(app.state.undo.index + 1);
-
-				} else {
-
-					app.state.undo.array.shift();
-					app.state.undo.array.push(app.file.data);
-				}
+				app.canvas.undoArrayUpdate();
 			}
 		}
 	};
@@ -718,8 +731,8 @@ window.addEventListener('load', function load() {
 
 	app.canvas.update = function(x, y, clickEvent) {
 
-		x -= cache.canvas.offsetLeft;
-		y -= cache.canvas.offsetTop;
+		x += window.pageXOffset - cache.canvas.offsetLeft;
+		y += window.pageYOffset -cache.canvas.offsetTop;
 
         var pixelSize = app.file.canvas.pixelSize,
             cols = Math.floor(x / pixelSize),
@@ -758,46 +771,15 @@ window.addEventListener('load', function load() {
 
 	app.canvas.flipCanvasHorizontal = function() {
 
-		app.data.update();
-
 		for (var i = 0; i < app.file.canvas.width; i++)
 			app.file.data[i].reverse();
-
-		if (app.state.undo.index < 4) {
-
-			app.state.undo.index++;
-			app.state.undo.array.splice(app.state.undo.index, 1, app.file.data);
-			app.state.undo.array.splice(app.state.undo.index + 1);
-
-		} else {
-
-			app.state.undo.array.shift();
-			app.state.undo.array.push(app.file.data);
-		}
-
-		app.data.load();
 	};
 
 	// flip canvas vertical
 
 	app.canvas.flipCanvasVertical = function() {
 
-		app.data.update();
 		app.file.data.reverse();
-
-		if (app.state.undo.index < 4) {
-
-			app.state.undo.index++;
-			app.state.undo.array.splice(app.state.undo.index, 1, app.file.data);
-			app.state.undo.array.splice(app.state.undo.index + 1);
-
-		} else {
-
-			app.state.undo.array.shift();
-			app.state.undo.array.push(app.file.data);
-		}
-
-		app.data.load();
 	};
 
 	// draw grid
@@ -850,6 +832,23 @@ window.addEventListener('load', function load() {
 
 			cache.canvas.style.top = 0;
 			cache.canvas.style.marginTop = 32 + 'px';
+		}
+	};
+
+	// add data to undo array
+
+	app.canvas.undoArrayUpdate = function() {
+
+		if (app.state.undo.index < 4) {
+
+			app.state.undo.index++;
+			app.state.undo.array.splice(app.state.undo.index, 1, app.file.data);
+			app.state.undo.array.splice(app.state.undo.index + 1);
+
+		} else {
+
+			app.state.undo.array.shift();
+			app.state.undo.array.push(app.file.data);
 		}
 	};
 
