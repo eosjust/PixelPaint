@@ -20,6 +20,7 @@ window.addEventListener('load', function load() {
 	const cache = {
 		menu	: document.getElementById('menu').childNodes,
 		modal	: document.getElementById('modal'),
+		modals	: document.getElementById('modal').childNodes,
 		toolbar	: document.getElementById('tools'),
 		tools	: document.getElementById('tools').getElementsByTagName('div'),
 		color	: document.getElementById('color'),
@@ -41,13 +42,11 @@ window.addEventListener('load', function load() {
 	// file settings
 
 	app.file = {
-		canvas : {
-			name		: 'untitled',
-			width		: 16,
-			height		: 16,
-			pixelSize	: 32
-		},
-		data : null
+		name		: 'untitled',
+		width		: 16,
+		height		: 16,
+		pixelSize	: 32,
+		data		: null
 	};
 
 	// app state
@@ -57,6 +56,7 @@ window.addEventListener('load', function load() {
 		menuOver	: false,
 		menuDown	: false,
         toolOver	: false,
+		panelOver	: false,
 		pixelSize   : null,
 		color		: 'rgb(0, 120, 248)',
 		colorCache	: null,
@@ -78,16 +78,11 @@ window.addEventListener('load', function load() {
 
 		app.state.mouseDown = true;
 
-		if (app.state.menuOver === false)
+		if (!app.state.menuOver)
 			app.menu.close();
 
-		// TODO
-		/*
-		if (cache.panel.className === 'selected') {
-
-			// cache.panel.className = '';
-		}
-		*/
+		if (!app.state.panelOver)
+			cache.panel.className = '';
 	};
 
 
@@ -107,16 +102,15 @@ window.addEventListener('load', function load() {
 
 	app.data.update = function() {
 
-		var pixelSize = app.file.canvas.pixelSize,
-			data = [];
+		var data = [];
 
-		for (var i = 0; i < app.file.canvas.height; i++) {
+		for (var i = 0; i < app.file.height; i++) {
 
 			var row = [];
 
-			for (var j = 0; j < app.file.canvas.width; j++) {
+			for (var j = 0; j < app.file.width; j++) {
 
-				var pixelColor = app.canvas.ctx.getImageData((j * pixelSize) + 1, (i * pixelSize) + 1, 1, 1).data;
+				var pixelColor = app.canvas.ctx.getImageData((j * app.file.pixelSize) + 1, (i * app.file.pixelSize) + 1, 1, 1).data;
 				row.push('rgba(' + pixelColor[0] + ', ' + pixelColor[1] + ', ' + pixelColor[2] + ', ' + pixelColor[3] + ')');
 			}
 
@@ -130,21 +124,21 @@ window.addEventListener('load', function load() {
 
 	app.data.load = function() {
 
-		var pixelSize = app.file.canvas.pixelSize,
+		var pixelSize = app.file.pixelSize,
 			i, j;
 
 		app.canvas.clear();
 
 		if (app.file.data) {
 
-			for (i = 0; i < app.file.canvas.height; i++) {
+			for (i = 0; i < app.file.height; i++) {
 
-				for (j = 0; j < app.file.canvas.width; j++) {
+				for (j = 0; j < app.file.width; j++) {
 
 					app.canvas.ctx.fillStyle = app.file.data[i][j];
 
 					if (app.state.grid)
-						app.canvas.ctx.fillRect((j * pixelSize) + 1, (i * pixelSize) + 1, app.state.pixelSize, app.state.pixelSize);
+						app.canvas.ctx.fillRect((j * pixelSize) + 1, (i * pixelSize) + 1, pixelSize, pixelSize);
 					else
 						app.canvas.ctx.fillRect((j * pixelSize), (i * pixelSize), pixelSize, pixelSize);
 				}
@@ -226,7 +220,7 @@ window.addEventListener('load', function load() {
 		for (var i = 0; i < inputs.length; i++) {
 
 			var id = (inputs[i].id).replace('canvas-', '');
-			inputs[i].setAttribute('value', app.file.canvas[id]);
+			inputs[i].setAttribute('value', app.file[id]);
 		}
 
 		// open modal
@@ -249,7 +243,7 @@ window.addEventListener('load', function load() {
 
 		// update form
 
-		document.getElementById('save-file-name').setAttribute('value', app.file.canvas.name);
+		document.getElementById('save-file-name').setAttribute('value', app.file.name);
 
 		// open modal
 
@@ -262,7 +256,7 @@ window.addEventListener('load', function load() {
 
 		// update form
 
-		document.getElementById('export-file-name').setAttribute('value', app.file.canvas.name);
+		document.getElementById('export-file-name').setAttribute('value', app.file.name);
 
 		// open modal
 
@@ -277,6 +271,9 @@ window.addEventListener('load', function load() {
 
 			app.state.undo.index--;
 			app.file.data = app.state.undo.array[app.state.undo.index];
+			app.file.width = app.file.data[0].length;
+			app.file.height = app.file.data.length;
+			app.canvas.create();
 			app.data.load();
 		}
 	};
@@ -289,6 +286,9 @@ window.addEventListener('load', function load() {
 
 			app.state.undo.index++;
 			app.file.data = app.state.undo.array[app.state.undo.index];
+			app.file.width = app.file.data[0].length;
+			app.file.height = app.file.data.length;
+			app.canvas.create();
 			app.data.load();
 		}
 	};
@@ -300,21 +300,32 @@ window.addEventListener('load', function load() {
 		// update form
 
 		var form = document.getElementById('pixelSize-pixelSize');
-		form.setAttribute('value', app.file.canvas.pixelSize);
+		form.setAttribute('value', app.file.pixelSize);
 
 		// open modal
 
 		app.modal.open('pixelSize');
 	};
 
-	// flip canvas 180
+	// flip canvas 180°
 
-	app.menu.oneEighty = function() {
+	app.menu.flipOneEighty = function() {
 
 		app.data.update();
 		app.canvas.flipCanvasHorizontal();
 		app.canvas.flipCanvasVertical();
 		app.canvas.undoArrayUpdate();
+		app.data.load();
+	};
+
+	// flip canvas 90° clockwise
+
+	app.menu.flipNinetyClockwise = function() {
+
+		app.data.update();
+		app.canvas.flipNinetyClockwise();
+		app.canvas.undoArrayUpdate();
+		app.canvas.create();
 		app.data.load();
 	};
 
@@ -422,12 +433,11 @@ window.addEventListener('load', function load() {
 
 	app.modal.hideAll = function() {
 
-		document.getElementById('newFile').className = 'hidden';
-		document.getElementById('openFile').className = 'hidden';
-		document.getElementById('saveFile').className = 'hidden';
-		document.getElementById('exportFile').className = 'hidden';
-		document.getElementById('pixelSize').className = 'hidden';
-		document.getElementById('about').className = 'hidden';
+		for (var i = 0; i < cache.modals.length; i++) {
+
+			if (cache.modals[i].nodeType !== 3 && cache.modals[i].id !== 'closeModal')
+				cache.modals[i].className = 'hidden';
+		}
 	};
 
 	// make new file
@@ -439,10 +449,10 @@ window.addEventListener('load', function load() {
 			height = document.getElementById('canvas-height').value,
 			pixelSize = document.getElementById('canvas-pixelSize').value;
 
-		app.file.canvas.name = name;
-		app.file.canvas.width = (width > 2) ? width : 2;
-		app.file.canvas.height = (height > 2) ? height : 2;
-		app.file.canvas.pixelSize = (pixelSize > 1) ? pixelSize : 1;
+		app.file.name = name;
+		app.file.width = (width > 2) ? width : 2;
+		app.file.height = (height > 2) ? height : 2;
+		app.file.pixelSize = (pixelSize > 1) ? pixelSize : 1;
 		app.file.data = null;
 		app.state.undo = {
 			array : [],
@@ -467,7 +477,11 @@ window.addEventListener('load', function load() {
 
 			var data = JSON.parse(reader.result);
 
-			if (data.hasOwnProperty('canvas') && data.hasOwnProperty('data')) {
+			if (data.hasOwnProperty('name') &&
+			    data.hasOwnProperty('width') &&
+				data.hasOwnProperty('height') &&
+				data.hasOwnProperty('pixelSize') &&
+				data.hasOwnProperty('data')) {
 
 				app.file = data;
 				app.canvas.create();
@@ -484,12 +498,12 @@ window.addEventListener('load', function load() {
 		var fileName = document.getElementById('save-file-name').value,
 			download = document.createElement('a');
 
-		app.file.canvas.name = fileName;
+		app.file.name = fileName;
 
 		var file = encodeURIComponent(JSON.stringify(app.file));
 
 		download.setAttribute('href', 'data:text/plain;charset=utf-8,' + file);
-		download.setAttribute('download', app.file.canvas.name + '.json');
+		download.setAttribute('download', app.file.name + '.json');
 		download.click();
 		app.modal.close();
 	};
@@ -503,9 +517,9 @@ window.addEventListener('load', function load() {
 			canvas = cache.canvas.getElementsByTagName('canvas')[0],
 			file = canvas.toDataURL('image/png');
 
-		app.file.canvas.name = fileName;
+		app.file.name = fileName;
 		download.setAttribute('href', file);
-		download.setAttribute('download', app.file.canvas.name + '.png');
+		download.setAttribute('download', app.file.name + '.png');
 		download.click();
 		app.modal.close();
 	};
@@ -516,7 +530,7 @@ window.addEventListener('load', function load() {
 
 		var pixelSize = document.getElementById('pixelSize-pixelSize').value;
 
-		app.file.canvas.pixelSize = (pixelSize > 1) ? pixelSize : 1;
+		app.file.pixelSize = (pixelSize > 1) ? pixelSize : 1;
 		app.canvas.create();
 		app.data.load();
 		app.modal.close();
@@ -563,6 +577,20 @@ window.addEventListener('load', function load() {
 
 			app.tools.colorPanel();
 		}
+	};
+
+	// mouse enter color panel
+
+	app.tools.panelHover = function() {
+
+		app.state.panelOver = true;
+	};
+
+	// mouse leave color panel
+
+	app.tools.panelMouseLeave = function() {
+
+		app.state.panelOver = false;
 	};
 
 	// open/close color panel
@@ -664,8 +692,8 @@ window.addEventListener('load', function load() {
 
 		var canvas = document.createElement('canvas');
 		app.canvas.ctx = canvas.getContext('2d');
-		canvas.width = app.file.canvas.width * app.file.canvas.pixelSize;
-		canvas.height = app.file.canvas.height * app.file.canvas.pixelSize;
+		canvas.width = app.file.width * app.file.pixelSize;
+		canvas.height = app.file.height * app.file.pixelSize;
 
 		// resize body
 
@@ -680,7 +708,7 @@ window.addEventListener('load', function load() {
 
 		// update data
 
-		app.state.pixelSize = app.state.grid ? app.file.canvas.pixelSize - 2 : app.file.canvas.pixelSize;
+		app.state.pixelSize = app.state.grid ? app.file.pixelSize - 2 : app.file.pixelSize;
 
 		if (app.file.data === null)
 			app.data.update();
@@ -720,10 +748,8 @@ window.addEventListener('load', function load() {
 
 			// update undo state
 
-			if (app.state.tool !== 'eyedrop') {
-
+			if (app.state.tool !== 'eyedrop')
 				app.canvas.undoArrayUpdate();
-			}
 		}
 	};
 
@@ -731,14 +757,10 @@ window.addEventListener('load', function load() {
 
 	app.canvas.update = function(x, y, clickEvent) {
 
-		x += window.pageXOffset - cache.canvas.offsetLeft;
-		y += window.pageYOffset -cache.canvas.offsetTop;
-
-        var pixelSize = app.file.canvas.pixelSize,
-            cols = Math.floor(x / pixelSize),
-            rows = Math.floor(y / pixelSize),
-            pixelX = cols * pixelSize,
-            pixelY = rows * pixelSize;
+        var cols = Math.floor((x + window.pageXOffset - cache.canvas.offsetLeft) / app.file.pixelSize),
+            rows = Math.floor((y + window.pageYOffset - cache.canvas.offsetTop) / app.file.pixelSize),
+            pixelX = cols * app.file.pixelSize,
+            pixelY = rows * app.file.pixelSize;
 
         if (clickEvent) {
 
@@ -761,17 +783,36 @@ window.addEventListener('load', function load() {
 
 	app.canvas.clear = function() {
 
-		var canvasWidth = app.file.canvas.pixelSize * app.file.canvas.width,
-			canvasHeight = app.file.canvas.pixelSize * app.file.canvas.height;
+		var canvasWidth = app.file.pixelSize * app.file.width,
+			canvasHeight = app.file.pixelSize * app.file.height;
 
 		app.canvas.ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+	};
+
+	// flip canvas 90° clockwise
+
+	app.canvas.flipNinetyClockwise = function() {
+
+		var data = [];
+
+		for (var i = 0; i < app.file.width; i++) {
+
+			data[i] = [];
+
+			for (var j = 0; j < app.file.height; j++)
+				data[i][j] = app.file.data[(app.file.height - (j + 1))][i];
+		}
+
+		app.file.width = data[0].length;
+		app.file.height = data.length;
+		app.file.data = data;
 	};
 
 	// flip canvas horizontal
 
 	app.canvas.flipCanvasHorizontal = function() {
 
-		for (var i = 0; i < app.file.canvas.width; i++)
+		for (var i = 0; i < app.file.width; i++)
 			app.file.data[i].reverse();
 	};
 
@@ -788,16 +829,15 @@ window.addEventListener('load', function load() {
 
 		app.canvas.ctx.fillStyle = 'rgb(126, 227, 211)';
 
-		var pixelSize = app.file.canvas.pixelSize,
-			width = app.file.canvas.width * pixelSize,
-			height = app.file.canvas.height * pixelSize;
+		var width = app.file.width * app.file.pixelSize,
+			height = app.file.height * app.file.pixelSize;
 
-		for (var i = 0; i < app.file.canvas.height + 1; i++) {
+		for (var i = 0; i < app.file.height + 1; i++) {
 
-			app.canvas.ctx.fillRect(0, i * pixelSize - 1, width, 2);
+			app.canvas.ctx.fillRect(0, i * app.file.pixelSize - 1, width, 2);
 
-			for (var j = 0; j < app.file.canvas.width + 1; j++)
-				app.canvas.ctx.fillRect(j * pixelSize - 1, 0, 2, width);
+			for (var j = 0; j < app.file.width + 1; j++)
+				app.canvas.ctx.fillRect(j * app.file.pixelSize - 1, 0, 2, width);
 		}
 	};
 
@@ -862,14 +902,13 @@ window.addEventListener('load', function load() {
 
 		document.onmousedown = app.mouseDown;
 		document.onmouseup = app.mouseUp;
-
 		window.onresize = app.resize;
 
 		// menu selection
 
 		for (var i = 0; i < cache.menu.length; i++) {
 
-			if (cache.menu[i].nodeType != 3) {
+			if (cache.menu[i].nodeType !== 3) {
 
 				cache.menu[i].onmouseup = app.menu.select;
 				cache.menu[i].onmouseenter = app.menu.hover;
@@ -918,12 +957,15 @@ window.addEventListener('load', function load() {
 		// tool selection
 
 		for (var i = 0; i < cache.tools.length; i++)
-			cache.tools[i].onmousedown = app.tools.select;
+			cache.tools[i].onmouseup = app.tools.select;
 
 		// color selection
 
 		for (var i = 0; i < cache.colors.length; i++)
-			cache.colors[i].onmousedown = app.tools.colorSelect;
+			cache.colors[i].onmouseup = app.tools.colorSelect;
+
+		cache.panel.onmouseenter = app.tools.panelHover;
+		cache.panel.onmouseleave = app.tools.panelMouseLeave;
 
 		app.tools.changeColor(app.state.color);
 		app.canvas.create();

@@ -154,7 +154,7 @@ body {
 	box-shadow: 2px 2px 2px #000;
 	left: 58px;
 	top: -78px;
-	width: 384px;
+	width: 336px;
 	margin-top: 267px;
 	border-radius: 5px;
 	display: none;
@@ -273,9 +273,7 @@ body {
 .c0A { background-color: rgb(0,104,0); }
 .c0B { background-color: rgb(0,88,0); }
 .c0C { background-color: rgb(0,64,88); }
-.c0D { background-color: rgb(0,0,0); }
-.c0E { background-color: rgb(0,0,0); }
-.c0F { background-color: rgb(0,0,0); border-top-right-radius: 4px; }
+.c0D { background-color: rgb(0,0,0); border-top-right-radius: 4px; }
 .c10 { background-color: rgb(188,188,188); }
 .c11 { background-color: rgb(0,120,248); }
 .c12 { background-color: rgb(0,88,248); }
@@ -290,8 +288,6 @@ body {
 .c1B { background-color: rgb(0,168,68); }
 .c1C { background-color: rgb(0,136,136); }
 .c1D { background-color: rgb(0,0,0); }
-.c1E { background-color: rgb(0,0,0); }
-.c1F { background-color: rgb(0,0,0); }
 .c20 { background-color: rgb(248,248,248); }
 .c21 { background-color: rgb(60,188,252); }
 .c22 { background-color: rgb(104,136,252); }
@@ -306,8 +302,6 @@ body {
 .c2B { background-color: rgb(88,248,152); }
 .c2C { background-color: rgb(0,232,216); }
 .c2D { background-color: rgb(120,120,120); }
-.c2E { background-color: rgb(0,0,0); }
-.c2F { background-color: rgb(0,0,0); }
 .c30 { background-color: rgb(256,256,256); border-bottom-left-radius: 4px; }
 .c31 { background-color: rgb(164,228,252); }
 .c32 { background-color: rgb(184,184,248); }
@@ -321,6 +315,4 @@ body {
 .c3A { background-color: rgb(184,248,184); }
 .c3B { background-color: rgb(184,248,216); }
 .c3C { background-color: rgb(0,252,252); }
-.c3D { background-color: rgb(216,216,216); }
-.c3E { background-color: rgb(0,0,0); }
-.c3F { background-color: rgb(0,0,0); border-bottom-right-radius: 4px; }
+.c3D { background-color: rgb(216,216,216); border-bottom-right-radius: 4px; }
