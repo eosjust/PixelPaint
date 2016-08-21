@@ -307,9 +307,9 @@ window.addEventListener('load', function load() {
 		app.modal.open('pixelSize');
 	};
 
-	// flip canvas 180°
+	// rotate canvas 180°
 
-	app.menu.flipOneEighty = function() {
+	app.menu.rotateOneEighty = function() {
 
 		app.data.update();
 		app.canvas.flipCanvasHorizontal();
@@ -318,12 +318,23 @@ window.addEventListener('load', function load() {
 		app.data.load();
 	};
 
-	// flip canvas 90° clockwise
+	// rotate canvas 90° clockwise
 
-	app.menu.flipNinetyClockwise = function() {
+	app.menu.rotateNinetyClockwise = function() {
 
 		app.data.update();
-		app.canvas.flipNinetyClockwise();
+		app.canvas.rotateNinetyClockwise();
+		app.canvas.undoArrayUpdate();
+		app.canvas.create();
+		app.data.load();
+	};
+
+	// rotate canvas 90° counter clockwise
+
+	app.menu.rotateNinetyCounterClockwise = function() {
+
+		app.data.update();
+		app.canvas.rotateNinetyCounterClockwise();
 		app.canvas.undoArrayUpdate();
 		app.canvas.create();
 		app.data.load();
@@ -365,7 +376,7 @@ window.addEventListener('load', function load() {
 		} else {
 
 			app.state.grid = true;
-			checkbox.className = '';
+			checkbox.className = 'check';
 			app.state.pixelSize -= 2;
 			app.canvas.grid();
 		}
@@ -377,10 +388,15 @@ window.addEventListener('load', function load() {
 
 		var checkbox = this.getElementsByTagName('span')[0];
 
-		if (cache.toolbar.className === '')
+		if (cache.toolbar.className === '') {
+
 			cache.toolbar.className = checkbox.className = 'hidden';
-		else
-			cache.toolbar.className = checkbox.className = '';
+
+		} else {
+
+			cache.toolbar.className = '';
+			checkbox.className = 'check';
+		}
 
 		app.canvas.offset(cache.canvas.offsetWidth, cache.canvas.offsetHeight);
 	};
@@ -397,7 +413,8 @@ window.addEventListener('load', function load() {
 
 		} else {
 
-			cache.canvas.className = checkbox.className = '';
+			cache.canvas.className = '';
+			checkbox.className = 'check';
 			app.canvas.offset(cache.canvas.offsetWidth, cache.canvas.offsetHeight);
 		}
 	};
@@ -789,9 +806,9 @@ window.addEventListener('load', function load() {
 		app.canvas.ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 	};
 
-	// flip canvas 90° clockwise
+	// rotate canvas 90° clockwise
 
-	app.canvas.flipNinetyClockwise = function() {
+	app.canvas.rotateNinetyClockwise = function() {
 
 		var data = [];
 
@@ -801,6 +818,25 @@ window.addEventListener('load', function load() {
 
 			for (var j = 0; j < app.file.height; j++)
 				data[i][j] = app.file.data[(app.file.height - (j + 1))][i];
+		}
+
+		app.file.width = data[0].length;
+		app.file.height = data.length;
+		app.file.data = data;
+	};
+
+	// rotate canvas 90° counter clockwise
+
+	app.canvas.rotateNinetyCounterClockwise = function() {
+
+		var data = [];
+
+		for (var i = 0; i < app.file.width; i++) {
+
+			data[i] = [];
+
+			for (var j = 0; j < app.file.height; j++)
+				data[i][j] = app.file.data[j][(app.file.width - (i + 1))];
 		}
 
 		app.file.width = data[0].length;
@@ -964,8 +1000,8 @@ window.addEventListener('load', function load() {
 		for (var i = 0; i < cache.colors.length; i++)
 			cache.colors[i].onmouseup = app.tools.colorSelect;
 
-		cache.panel.onmouseenter = app.tools.panelHover;
-		cache.panel.onmouseleave = app.tools.panelMouseLeave;
+		cache.color.onmouseenter = app.tools.panelHover;
+		cache.color.onmouseleave = app.tools.panelMouseLeave;
 
 		app.tools.changeColor(app.state.color);
 		app.canvas.create();
