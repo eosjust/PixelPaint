@@ -667,10 +667,10 @@ window.addEventListener('load', function load() {
 		canvas.width = app.file.canvas.width * app.file.canvas.pixelSize;
 		canvas.height = app.file.canvas.height * app.file.canvas.pixelSize;
 
-		// resize menu/toolbar
+		// resize body
 
-		document.getElementById('menu').style.minWidth = 44 + (8 * 2) + canvas.width + 'px';
-		cache.toolbar.style.minHeight = (8 * 2) + canvas.height + 'px';
+		document.body.style.minWidth = 44 + (8 * 2) + canvas.width + 'px';
+		document.body.style.minHeight = 30 + (8 * 2) + canvas.height + 'px';
 
 		// add canvas
 
