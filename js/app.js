@@ -55,9 +55,9 @@ window.addEventListener('load', function load() {
 		mouseDown	: false,
 		menuOver	: false,
 		menuDown	: false,
-        toolOver	: false,
+		toolOver	: false,
 		panelOver	: false,
-		pixelSize   : null,
+		pixelSize	: null,
 		color		: 'rgb(0, 120, 248)',
 		colorCache	: null,
 		tool		: 'draw',
@@ -89,6 +89,33 @@ window.addEventListener('load', function load() {
 	app.mouseUp = function() {
 
 		app.state.mouseDown = false;
+	};
+
+
+	app.keydown = function(e) {
+
+		switch (e.keyCode) {
+			case 66: // b
+				app.state.tool = 'draw';
+				break;
+			case 69: // e
+				app.state.tool = 'erase';
+				break;
+			case 83: // e
+				app.state.tool = 'smudge';
+				break;
+			case 71: // g
+				app.state.tool = 'fill';
+				break;
+			case 73: // i
+				app.state.tool = 'eyedrop';
+				break;
+		}
+
+		for (var i = 0; i < cache.tools.length; i++)
+			cache.tools[i].className = '';
+
+		document.getElementById(app.state.tool).className = 'selected';
 	};
 
 	// window resize
@@ -495,7 +522,7 @@ window.addEventListener('load', function load() {
 			var data = JSON.parse(reader.result);
 
 			if (data.hasOwnProperty('name') &&
-			    data.hasOwnProperty('width') &&
+				data.hasOwnProperty('width') &&
 				data.hasOwnProperty('height') &&
 				data.hasOwnProperty('pixelSize') &&
 				data.hasOwnProperty('data')) {
@@ -938,6 +965,7 @@ window.addEventListener('load', function load() {
 
 		document.onmousedown = app.mouseDown;
 		document.onmouseup = app.mouseUp;
+		document.onkeydown = app.keydown;
 		window.onresize = app.resize;
 
 		// menu selection

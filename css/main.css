@@ -42,10 +42,12 @@ body {
 
 #menu > li:hover {
 	background-color: #333;
+	border-radius: 5px;
 }
 
 #menu > li.selected {
 	background-color: #666;
+	border-radius: 0;
 }
 
 #menu > li > ul {
@@ -107,7 +109,7 @@ body {
 
 #menu .arrow {
 	position: absolute;
-	right: 10px;
+	right: 8px;
 }
 
 /* tools */
