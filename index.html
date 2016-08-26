@@ -24,7 +24,7 @@
 		</li>
 		<li>Image
 			<ul>
-				<li data-value="pixelSize">Pixel Size</li>
+				<li data-value="canvasSize">Canvas Size</li>
 				<li>Image Rotation <span class="arrow">&#9658;</span>
 					<ul>
 						<li data-value="rotateOneEighty">180&deg;</li>
@@ -132,32 +132,75 @@
 	<div id="modal" class="hidden">
 		<div id="closeModal">X</div>
 		<div id="newFile" class="hidden">
-			<p>name <input id="canvas-name" class="txtInput" type="text" /></p>
-			<p>width <input id="canvas-width" class="numInput" type="number" min="2" /></p>
-			<p>height <input id="canvas-height" class="numInput" type="number" min="2" /></p>
-			<p>pixel size <input id="canvas-pixelSize" class="numInput" type="number" min="1" /></p>
-			<span id="newSubmit" class="btn select">new</span>
-			<span class="btn cancel">cancel</span>
+			<form>
+				<p class="label">name</p>
+				<input id="canvas-name" class="txtInput" type="text" />
+				<p class="label">width</p>
+				<input id="canvas-width" class="numInput" type="number" min="2" />
+				<p class="label">height</p>
+				<input id="canvas-height" class="numInput" type="number" min="2" />
+				<p class="label">pixel size</p>
+				<input id="canvas-pixelSize" class="numInput" type="number" min="1" />
+			</form>
+			<div class="btns">
+				<span id="newSubmit" class="btn select">new</span>
+				<span class="btn cancel">cancel</span>
+			</div>
 		</div>
 		<div id="openFile" class="hidden">
-			<p>file <input id="open-file" type="file" /></p>
-			<span id="openSubmit" class="btn select">open</span>
-			<span class="btn cancel">cancel</span>
+			<form>
+				<input id="open-file" type="file" />
+			</form>
+			<div class="btns">
+				<span id="openSubmit" class="btn select">open</span>
+				<span class="btn cancel">cancel</span>
+			</div>
 		</div>
 		<div id="saveFile" class="hidden">
-			<p>name <input id="save-file-name" class="txtInput" type="text" /></p>
-			<span id="saveSubmit" class="btn select">save</span>
-			<span class="btn cancel">cancel</span>
+			<form>
+				<p class="label">file name</p>
+				<input id="save-file-name" class="txtInput" type="text" />
+			</form>
+			<div class="btns">
+				<span id="saveSubmit" class="btn select">save</span>
+				<span class="btn cancel">cancel</span>
+			</div>
 		</div>
 		<div id="exportFile" class="hidden">
-			<p>name <input id="export-file-name" class="txtInput" type="text" /></p>
-			<span id="exportSubmit" class="btn select">export</span>
-			<span class="btn cancel">cancel</span>
+			<form>
+				<p class="label">file name</p>
+				<input id="export-file-name" class="txtInput" type="text" />
+			</form>
+			<div class="btns">
+				<span id="exportSubmit" class="btn select">export</span>
+				<span class="btn cancel">cancel</span>
+			</div>
 		</div>
-		<div id="pixelSize" class="hidden">
-			<p>pixel size <input id="pixelSize-pixelSize" class="numInput" type="number" min="1" /></p>
-			<span id="pixelSizeSubmit" class="btn select">update</span>
-			<span class="btn cancel">cancel</span>
+		<div id="canvasSize" class="hidden">
+			<form>
+				<p class="label">width</p>
+				<input id="canvasSize-width" class="numInput" type="number" min="2" />
+				<p class="label">height</p>
+				<input id="canvasSize-height" class="numInput" type="number" min="2" />
+				<p class="label">pixel size</p>
+				<input id="canvasSize-pixelSize" class="numInput" type="number" min="1" />
+				<p class="label">anchor</p>
+				<div id="anchorTable">
+					<div data-posX="left" data-posY="top"></div>
+					<div data-posX="center" data-posY="top"></div>
+					<div data-posX="right" data-posY="top"></div>
+					<div data-posX="left" data-posY="middle"></div>
+					<div data-posX="center" data-posY="middle" class="selected"></div>
+					<div data-posX="right" data-posY="middle"></div>
+					<div data-posX="left" data-posY="bottom"></div>
+					<div data-posX="center" data-posY="bottom"></div>
+					<div data-posX="right" data-posY="bottom"></div>
+				</div>
+			</form>
+			<div class="btns">
+				<span id="canvasSizeSubmit" class="btn select">update</span>
+				<span class="btn cancel">cancel</span>
+			</div>
 		</div>
 		<div id="about" class="hidden">
 			<h2>Pixel Paint</h2>

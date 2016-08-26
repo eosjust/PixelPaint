@@ -231,7 +231,7 @@ body {
 	color: #fff;
 	background-color: #000;
 	width: 400px;
-	padding: 20px;
+	padding: 30px;
 	position: fixed;
 	left: 50%;
 	top: 36%;
@@ -248,22 +248,74 @@ body {
 }
 
 #modal p, #modal h2 {
-	padding: 6px;
+	padding: 6px 0;
 }
 
 #modal a {
 	color: #aaa;
 }
 
+#modal form {
+	float: left;
+	width: 248px;
+	margin-bottom: -10px;
+}
+
+#modal p.label {
+	float: left;
+	width: 116px;
+	line-height: 27px;
+	padding: 0;
+	margin-bottom: 10px;
+}
+
 #modal input {
 	float: right;
-	width: 100px;
+	width: 120px;
+	padding: 6px;
+	margin-bottom: 10px;
+	border: none;
+}
+
+#modal #openFile input {
+	width: 100%;
+}
+
+#modal #anchorTable {
+	float: right;
+	width: 132px;
+	height: 132px;
+	background-color: #fff;
+	margin-bottom: 10px;
+}
+
+#modal #anchorTable > div {
+	float: left;
+	width: 42px;
+	height: 42px;
+	margin: 1px;
+	background-color: #000;
+	cursor: pointer;
+}
+
+#modal #anchorTable > div:hover {
+	background-color: #fff;
+}
+
+#modal #anchorTable > div.selected {
+	background-color: #fff;
+}
+
+#modal .btns {
+	width: 152px;
+	float: left;
+	margin-bottom: -20px;
 }
 
 #modal .btn {
 	width: 100px;
 	padding: 10px;
-	margin: 10px;
+	margin: 0 0 20px 30px;
 	display: inline-block;
 	text-align: center;
 	border: 1px solid #fff;
@@ -279,15 +331,6 @@ body {
 	color: #fff;
 	background-color: #666;
 	border-color:#fff;
-}
-
-#modal #newFile p, #modal #openFile p, #modal #saveFile p, #modal #exportFile p, #modal #pixelSize p  {
-	width: 54%;
-	float: right;
-}
-
-#modal #openFile input {
-	width: 170px;
 }
 
 /* nes colors */

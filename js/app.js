@@ -19,6 +19,7 @@ window.addEventListener('load', function load() {
 
 	const cache = {
 		menu	: document.getElementById('menu').childNodes,
+		anchor  : document.getElementById('anchorTable').getElementsByTagName('div'),
 		modal	: document.getElementById('modal'),
 		modals	: document.getElementById('modal').childNodes,
 		toolbar	: document.getElementById('tools'),
@@ -320,18 +321,29 @@ window.addEventListener('load', function load() {
 		}
 	};
 
-	// change pixel size
+	// canvas size
 
-	app.menu.pixelSize = function() {
+	app.menu.canvasSize = function() {
 
 		// update form
 
-		var form = document.getElementById('pixelSize-pixelSize');
-		form.setAttribute('value', app.file.pixelSize);
+		document.getElementById('canvasSize-width').setAttribute('value', app.file.width);
+		document.getElementById('canvasSize-height').setAttribute('value', app.file.height);
+		document.getElementById('canvasSize-pixelSize').setAttribute('value', app.file.pixelSize);
 
 		// open modal
 
-		app.modal.open('pixelSize');
+		app.modal.open('canvasSize');
+	};
+
+	// change anchor point for canvas size
+
+	app.menu.anchorSelect = function() {
+
+		for (var i = 0; i < cache.anchor.length; i++)
+			cache.anchor[i].className = '';
+
+		this.className = 'selected';
 	};
 
 	// rotate canvas 180°
@@ -375,7 +387,7 @@ window.addEventListener('load', function load() {
 		app.canvas.flipCanvasHorizontal();
 		app.canvas.undoArrayUpdate();
 		app.data.load();
-	}
+	};
 
 	// flip canvas vertical
 
@@ -385,7 +397,7 @@ window.addEventListener('load', function load() {
 		app.canvas.flipCanvasVertical();
 		app.canvas.undoArrayUpdate();
 		app.data.load();
-	}
+	};
 
 	// view canvas grid
 
@@ -568,13 +580,169 @@ window.addEventListener('load', function load() {
 		app.modal.close();
 	};
 
-	// update pixel size
+	// update canvas size
 
-	app.modal.pixelSize = function() {
+	app.modal.canvasSize = function() {
 
-		var pixelSize = document.getElementById('pixelSize-pixelSize').value;
+		app.data.update();
 
+		var width = document.getElementById('canvasSize-width').value,
+			height = document.getElementById('canvasSize-height').value,
+			pixelSize = document.getElementById('canvasSize-pixelSize').value,
+			anchor = document.getElementById('anchorTable').getElementsByClassName('selected')[0],
+			posX = anchor.dataset.posx,
+			posY = anchor.dataset.posy,
+			data = app.file.data,
+			canvasWidth = data[0].length,
+			canvasHeight = data.length;
+
+		switch (posX) {
+
+			case 'left':
+
+				if (width > canvasWidth) {
+
+					for (var i = 0; i < canvasHeight; i++) {
+
+						for (var j = 0; j < width - canvasWidth; j++)
+							data[i].push('rgba(0, 0, 0, 0)');
+					}
+
+				} else {
+
+					for (var i = 0; i < canvasHeight; i++)
+						data[i].splice(width, canvasWidth - width);
+				}
+
+				break;
+
+			case 'center':
+
+				if (width > canvasWidth) {
+
+					var colLeft = Math.ceil((width - canvasWidth) / 2),
+						colRight = Math.floor((width - canvasWidth) / 2);
+
+					for (var i = 0; i < canvasHeight; i++) {
+
+						for (var j = 0; j < colLeft; j++)
+							data[i].push('rgba(0, 0, 0, 0)');
+
+						for (var j = 0; j < colRight; j++)
+							data[i].unshift('rgba(0, 0, 0, 0)');
+					}
+
+				} else {
+
+					var colLeft = Math.ceil((canvasWidth - width) / 2),
+						colRight = Math.floor((canvasWidth - width) / 2);
+
+					for (var i = 0; i < canvasHeight; i++) {
+
+						data[i].splice(0, colRight);
+						data[i].splice(width, colLeft);
+					}
+				}
+
+				break;
+
+			case 'right':
+
+				if (width > canvasWidth) {
+
+					for (var i = 0; i < canvasHeight; i++) {
+
+						for (var j = 0; j < width - canvasWidth; j++)
+							data[i].unshift('rgba(0, 0, 0, 0)');
+					}
+
+				} else {
+
+					for (var i = 0; i < canvasHeight; i++)
+						data[i].splice(0, canvasWidth - width);
+				}
+
+				break;
+		}
+
+		canvasWidth = data[0].length;
+		canvasHeight = data.length;
+
+		switch (posY) {
+
+			case 'top':
+
+				if (height > canvasHeight) {
+
+					var canvasRow = [];
+
+					for (var i = 0; i < width; i++)
+						canvasRow.push('rgba(0, 0, 0, 0)');
+
+					for (var i = 0; i < height - canvasHeight; i++)
+						data.push(canvasRow);
+
+				} else {
+
+					data.splice(height, canvasHeight - height);
+				}
+
+				break;
+
+			case 'middle':
+
+				if (height > canvasHeight) {
+
+					var rowTop = Math.ceil((height - canvasHeight) / 2),
+						rowBottom = Math.floor((height - canvasHeight) / 2),
+						canvasRow = [];
+
+					for (var i = 0; i < width; i++)
+						canvasRow.push('rgba(0, 0, 0, 0)');
+
+					for (var i = 0; i < rowTop; i++)
+						data.push(canvasRow);
+
+					for (var i = 0; i < rowBottom; i++)
+						data.unshift(canvasRow);
+
+				} else {
+
+					var rowTop = Math.ceil((canvasHeight - height) / 2),
+						rowBottom = Math.floor((canvasHeight - height) / 2);
+
+					data.splice(0, rowBottom);
+					data.splice(height, rowTop);
+				}
+
+				break;
+
+			case 'bottom':
+
+				if (height > canvasHeight) {
+
+					var canvasRow = [];
+
+					for (var i = 0; i < width; i++)
+						canvasRow.push('rgba(0, 0, 0, 0)');
+
+					for (var i = 0; i < height - canvasHeight; i++)
+						data.unshift(canvasRow);
+
+				} else {
+
+					data.splice(0, canvasHeight - height);
+				}
+
+				break;
+		}
+
+		app.file.data = data;
+		app.file.width = data[0].length;
+		app.file.height = data.length;
 		app.file.pixelSize = (pixelSize > 1) ? pixelSize : 1;
+
+		app.canvas.undoArrayUpdate();
 		app.canvas.create();
 		app.data.load();
 		app.modal.close();
@@ -732,6 +900,10 @@ window.addEventListener('load', function load() {
 
 	app.canvas.create = function() {
 
+		// update document title
+
+		document.title = 'Pixel Paint - "' + app.file.name + '"';
+
 		// create canvas
 
 		var canvas = document.createElement('canvas');
@@ -794,7 +966,7 @@ window.addEventListener('load', function load() {
 
 			if (app.state.tool !== 'eyedrop')
 				app.canvas.undoArrayUpdate();
-		}
+		};
 	};
 
 	// update canvas
@@ -990,6 +1162,9 @@ window.addEventListener('load', function load() {
 			}
 		}
 
+		for (var i = 0; i < cache.anchor.length; i++)
+			cache.anchor[i].onmouseup = app.menu.anchorSelect;
+
 		// modal
 
 		document.getElementById('closeModal').onmouseup = app.modal.close;
@@ -997,7 +1172,7 @@ window.addEventListener('load', function load() {
 		document.getElementById('openSubmit').onmouseup = app.modal.openFile;
 		document.getElementById('saveSubmit').onmouseup = app.modal.saveFile;
 		document.getElementById('exportSubmit').onmouseup = app.modal.exportFile;
-		document.getElementById('pixelSizeSubmit').onmouseup = app.modal.pixelSize;
+		document.getElementById('canvasSizeSubmit').onmouseup = app.modal.canvasSize;
 
 		// modal cancel btn
 
