@@ -248,7 +248,7 @@ window.addEventListener('load', function load() {
 		for (var i = 0; i < inputs.length; i++) {
 
 			var id = (inputs[i].id).replace('canvas-', '');
-			inputs[i].setAttribute('value', app.file[id]);
+			inputs[i].value = app.file[id];
 		}
 
 		// open modal
@@ -325,11 +325,15 @@ window.addEventListener('load', function load() {
 
 	app.menu.canvasSize = function() {
 
+		var inputs = document.getElementById('canvasSize').getElementsByTagName('input');
+
 		// update form
 
-		document.getElementById('canvasSize-width').setAttribute('value', app.file.width);
-		document.getElementById('canvasSize-height').setAttribute('value', app.file.height);
-		document.getElementById('canvasSize-pixelSize').setAttribute('value', app.file.pixelSize);
+		for (var i = 0; i < inputs.length; i++) {
+
+			var id = (inputs[i].id).replace('canvasSize-', '');
+			inputs[i].value = app.file[id];
+		}
 
 		// open modal
 
@@ -900,9 +904,7 @@ window.addEventListener('load', function load() {
 
 	app.canvas.create = function() {
 
-		// update document title
-
-		document.title = 'Pixel Paint - "' + app.file.name + '"';
+		cache.canvas.className = 'hidden';
 
 		// create canvas
 
@@ -921,6 +923,11 @@ window.addEventListener('load', function load() {
 		cache.canvas.innerHTML = '';
 		app.canvas.offset(canvas.width, canvas.height);
 		cache.canvas.appendChild(canvas);
+		cache.canvas.className = '';
+
+		// update document title
+
+		document.title = 'Pixel Paint - "' + app.file.name + '"';
 
 		// update data
 
