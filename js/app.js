@@ -62,6 +62,7 @@ window.addEventListener('load', function load() {
     color      : 'rgb(0, 120, 248)',
     colorCache : null,
     tool       : 'draw',
+    zoom       : 0,
     grid       : false,
     undo       : {
       array    : [],
@@ -105,6 +106,15 @@ window.addEventListener('load', function load() {
       case 73: // i
         app.state.tool = 'eyedrop';
         break;
+      case 48: // 0
+        app.menu.zoom100();
+        break;
+      case 187: // +
+        app.menu.zoomIn();
+        break;
+      case 189: // -
+        app.menu.zoomOut();
+        break;
     }
     for (var i = 0; i < cache.tools.length; i++) {
       cache.tools[i].className = '';
@@ -121,11 +131,12 @@ window.addEventListener('load', function load() {
   // update data
 
   app.data.update = function() {
-    var data = [];
+    var data = [],
+        pixelSize = app.file.pixelSize + app.state.zoom;
     for (var i = 0; i < app.file.height; i++) {
       var row = [];
       for (var j = 0; j < app.file.width; j++) {
-        var pixelColor = app.canvas.ctx.getImageData((j * app.file.pixelSize) + 1, (i * app.file.pixelSize) + 1, 1, 1).data;
+        var pixelColor = app.canvas.ctx.getImageData((j * pixelSize) + 1, (i * pixelSize) + 1, 1, 1).data;
         row.push('rgba(' + pixelColor[0] + ', ' + pixelColor[1] + ', ' + pixelColor[2] + ', ' + pixelColor[3] + ')');
       }
       data.push(row);
@@ -136,7 +147,7 @@ window.addEventListener('load', function load() {
   // load & print data
 
   app.data.load = function() {
-    var pixelSize = app.file.pixelSize,
+    var pixelSize = app.file.pixelSize + app.state.zoom,
         i, j;
     app.canvas.clear();
     if (app.file.data) {
@@ -333,6 +344,40 @@ window.addEventListener('load', function load() {
     app.data.load();
   };
 
+  // zoom in
+
+  app.menu.zoomIn = function() {
+    app.state.zoom++;
+    app.canvas.create();
+    app.data.load();
+  };
+
+  // zoom out
+
+  app.menu.zoomOut = function() {
+    if ((app.file.pixelSize + app.state.zoom) > 1) {
+      app.state.zoom--;
+      app.canvas.create();
+      app.data.load();
+    }
+  };
+
+  // zoom 100
+
+  app.menu.zoom100 = function() {
+    app.state.zoom = 0;
+    app.canvas.create();
+    app.data.load();
+  };
+
+  // zoom 200
+
+  app.menu.zoom200 = function() {
+    app.state.zoom = app.file.pixelSize * 2;
+    app.canvas.create();
+    app.data.load();
+  }
+
   // view canvas grid
 
   app.menu.grid = function() {
@@ -411,14 +456,15 @@ window.addEventListener('load', function load() {
 
   app.modal.newFile = function() {
     var name = document.getElementById('canvas-name').value,
-        width = document.getElementById('canvas-width').value,
-        height = document.getElementById('canvas-height').value,
-        pixelSize = document.getElementById('canvas-pixelSize').value;
+        width = Number(document.getElementById('canvas-width').value),
+        height = Number(document.getElementById('canvas-height').value),
+        pixelSize = Number(document.getElementById('canvas-pixelSize').value);
     app.file.name = name;
     app.file.width = (width > 2) ? width : 2;
     app.file.height = (height > 2) ? height : 2;
     app.file.pixelSize = (pixelSize > 1) ? pixelSize : 1;
     app.file.data = null;
+    app.state.zoom = 0;
     app.state.undo = {
       array : [],
       index : 0
@@ -481,9 +527,9 @@ window.addEventListener('load', function load() {
 
   app.modal.canvasSize = function() {
     app.data.update();
-    var width = document.getElementById('canvasSize-width').value,
-        height = document.getElementById('canvasSize-height').value,
-        pixelSize = document.getElementById('canvasSize-pixelSize').value,
+    var width = Number(document.getElementById('canvasSize-width').value),
+        height = Number(document.getElementById('canvasSize-height').value),
+        pixelSize = Number(document.getElementById('canvasSize-pixelSize').value),
         anchor = document.getElementById('anchorTable').getElementsByClassName('selected')[0],
         posX = anchor.dataset.posx,
         posY = anchor.dataset.posy,
@@ -730,10 +776,11 @@ window.addEventListener('load', function load() {
   app.canvas.create = function() {
     cache.canvas.className = 'hidden';
     // create canvas
-    var canvas = document.createElement('canvas');
+    var canvas = document.createElement('canvas'),
+        pixelSize = app.file.pixelSize + app.state.zoom;
     app.canvas.ctx = canvas.getContext('2d');
-    canvas.width = app.file.width * app.file.pixelSize;
-    canvas.height = app.file.height * app.file.pixelSize;
+    canvas.width = app.file.width * pixelSize;
+    canvas.height = app.file.height * pixelSize;
     // resize body
     document.body.style.minWidth = 44 + (8 * 2) + canvas.width + 'px';
     document.body.style.minHeight = 30 + (8 * 2) + canvas.height + 'px';
@@ -745,7 +792,7 @@ window.addEventListener('load', function load() {
     // update document title
     document.title = 'Pixel Paint - "' + app.file.name + '"';
     // update data
-    app.state.pixelSize = app.state.grid ? app.file.pixelSize - 2 : app.file.pixelSize;
+    app.state.pixelSize = app.state.grid ? pixelSize - 2 : pixelSize;
     if (app.file.data === null) {
       app.data.update();
     }
@@ -781,10 +828,11 @@ window.addEventListener('load', function load() {
   // update canvas
 
   app.canvas.update = function(x, y, clickEvent) {
-    var cols = Math.floor((x + window.pageXOffset - cache.canvas.offsetLeft) / app.file.pixelSize),
-        rows = Math.floor((y + window.pageYOffset - cache.canvas.offsetTop) / app.file.pixelSize),
-        pixelX = cols * app.file.pixelSize,
-        pixelY = rows * app.file.pixelSize;
+    var pixelSize = app.file.pixelSize + app.state.zoom,
+        cols = Math.floor((x + window.pageXOffset - cache.canvas.offsetLeft) / pixelSize),
+        rows = Math.floor((y + window.pageYOffset - cache.canvas.offsetTop) / pixelSize),
+        pixelX = cols * pixelSize,
+        pixelY = rows * pixelSize;
     if (clickEvent) {
       if (app.file.data[rows][cols] !== 'rgba(0, 0, 0, 0)') {
         app.state.colorCache = app.file.data[rows][cols];
@@ -802,8 +850,9 @@ window.addEventListener('load', function load() {
   // clear canvas
 
   app.canvas.clear = function() {
-    var canvasWidth = app.file.pixelSize * app.file.width,
-        canvasHeight = app.file.pixelSize * app.file.height;
+    var pixelSize = app.file.pixelSize + app.state.zoom,
+        canvasWidth = pixelSize * app.file.width,
+        canvasHeight = pixelSize * app.file.height;
     app.canvas.ctx.clearRect(0, 0, canvasWidth, canvasHeight);
   };
 
@@ -855,12 +904,13 @@ window.addEventListener('load', function load() {
 
   app.canvas.grid = function() {
     app.canvas.ctx.fillStyle = 'rgb(126, 227, 211)';
-    var width = app.file.width * app.file.pixelSize,
-        height = app.file.height * app.file.pixelSize;
+    var pixelSize = app.file.pixelSize + app.state.zoom,
+        width = app.file.width * pixelSize,
+        height = app.file.height * pixelSize;
     for (var i = 0; i < app.file.height + 1; i++) {
-      app.canvas.ctx.fillRect(0, i * app.file.pixelSize - 1, width, 2);
+      app.canvas.ctx.fillRect(0, i * pixelSize - 1, width, 2);
       for (var j = 0; j < app.file.width + 1; j++) {
-        app.canvas.ctx.fillRect(j * app.file.pixelSize - 1, 0, 2, width);
+        app.canvas.ctx.fillRect(j * pixelSize - 1, 0, 2, width);
       }
     }
   };
