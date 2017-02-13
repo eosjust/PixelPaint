@@ -347,6 +347,7 @@ window.addEventListener('load', function load() {
   // zoom in
 
   app.menu.zoomIn = function() {
+    app.data.update();
     app.state.zoom++;
     app.canvas.create();
     app.data.load();
@@ -356,6 +357,7 @@ window.addEventListener('load', function load() {
 
   app.menu.zoomOut = function() {
     if ((app.file.pixelSize + app.state.zoom) > 1) {
+      app.data.update();
       app.state.zoom--;
       app.canvas.create();
       app.data.load();
@@ -365,6 +367,7 @@ window.addEventListener('load', function load() {
   // zoom 100
 
   app.menu.zoom100 = function() {
+    app.data.update();
     app.state.zoom = 0;
     app.canvas.create();
     app.data.load();
@@ -373,6 +376,7 @@ window.addEventListener('load', function load() {
   // zoom 200
 
   app.menu.zoom200 = function() {
+    app.data.update();
     app.state.zoom = app.file.pixelSize * 2;
     app.canvas.create();
     app.data.load();
