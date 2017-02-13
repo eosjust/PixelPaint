@@ -512,6 +512,12 @@ window.addEventListener('load', function load() {
   // export file
 
   app.modal.exportFile = function() {
+    var zoom = app.state.zoom,
+        grid = app.state.grid;
+    app.state.zoom = 0;
+    app.state.grid = false;
+    app.canvas.create();
+    app.data.load();
     var fileName = document.getElementById('export-file-name').value,
         download = document.createElement('a'),
         canvas = cache.canvas.getElementsByTagName('canvas')[0],
@@ -521,6 +527,10 @@ window.addEventListener('load', function load() {
     download.setAttribute('download', app.file.name + '.png');
     download.click();
     app.modal.close();
+    app.state.zoom = zoom;
+    app.state.grid = grid;
+    app.canvas.create();
+    app.data.load();
   };
 
   // update canvas size
