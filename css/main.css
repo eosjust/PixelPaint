@@ -14,7 +14,7 @@ body {
 }
 
 .hidden {
-    display: none;
+	display: none;
 }
 
 /* menu */
@@ -72,6 +72,10 @@ body {
 	white-space: nowrap;
 }
 
+#menu > li > ul > li.paddingLeft {
+	padding: 0 34px 0 24px;
+}
+
 #menu > li > ul > li:hover {
 	color: #333;
 	background-color: #ddd;
@@ -95,6 +99,10 @@ body {
 
 #menu > li > ul > li > ul > li {
 	padding: 0 24px 0 24px;
+}
+
+#menu > li > ul > li > ul > li.paddingLeft {
+	padding: 0 34px 0 24px;
 }
 
 #menu > li > ul > li > ul > li:hover {
