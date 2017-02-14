@@ -58,7 +58,7 @@ window.addEventListener('load', function load() {
     menuDown   : false,
     toolOver   : false,
     panelOver  : false,
-    pixelSize  : null,
+    pixelSize  : app.file.pixelSize,
     pixelGrid  : null,
     color      : 'rgb(0, 120, 248)',
     colorCache : null,
@@ -792,8 +792,8 @@ window.addEventListener('load', function load() {
     // create canvas
     var canvas = document.createElement('canvas');
     app.canvas.ctx = canvas.getContext('2d');
-    canvas.width = app.file.width * app.file.pixelSize;
-    canvas.height = app.file.height * app.file.pixelSize;
+    canvas.width = app.file.width * app.state.pixelSize;
+    canvas.height = app.file.height * app.state.pixelSize;
     // resize body
     document.body.style.minWidth = 44 + (8 * 2) + canvas.width + 'px';
     document.body.style.minHeight = 30 + (8 * 2) + canvas.height + 'px';
