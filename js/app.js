@@ -689,7 +689,9 @@ window.addEventListener('load', function load() {
     if (selectedId !== 'color') {
       app.state.tool = selectedId;
       for (var i = 0; i < cache.tools.length; i++) {
-        cache.tools[i].className = '';
+        if (cache.tools[i].id !== 'color') {
+          cache.tools[i].className = '';
+        }
       }
       this.className = 'selected';
     } else {
