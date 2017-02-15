@@ -107,6 +107,9 @@ window.addEventListener('load', function load() {
       case 73: // i
         app.state.tool = 'eyedrop';
         break;
+      case 90: // z
+        app.menu.undo();
+        break;
       case 48: // 0
         app.menu.zoom100();
         break;
@@ -160,7 +163,7 @@ window.addEventListener('load', function load() {
           }
         }
       }
-      if (app.state.grid) {
+      if (app.state.grid && app.state.pixelSize > 2) {
         app.canvas.grid();
       }
     }
@@ -815,7 +818,7 @@ window.addEventListener('load', function load() {
       app.state.undo.array = [app.file.data];
     }
     // draw grid
-    if (app.state.grid) {
+    if (app.state.grid && app.state.pixelSize > 2) {
       app.canvas.grid();
     }
     // mouse down canvas event
@@ -916,13 +919,12 @@ window.addEventListener('load', function load() {
 
   app.canvas.grid = function() {
     app.canvas.ctx.fillStyle = 'rgb(126, 227, 211)';
-    var pixelSize = app.file.pixelSize + app.state.zoom,
-        width = app.file.width * pixelSize,
-        height = app.file.height * pixelSize;
+    var width = app.file.width * app.state.pixelSize,
+        height = app.file.height * app.state.pixelSize;
     for (var i = 0; i < app.file.height + 1; i++) {
-      app.canvas.ctx.fillRect(0, i * pixelSize - 1, width, 2);
+      app.canvas.ctx.fillRect(0, i * app.state.pixelSize - 1, width, 2);
       for (var j = 0; j < app.file.width + 1; j++) {
-        app.canvas.ctx.fillRect(j * pixelSize - 1, 0, 2, width);
+        app.canvas.ctx.fillRect(j * app.state.pixelSize - 1, 0, 2, width);
       }
     }
   };
