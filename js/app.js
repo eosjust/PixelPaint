@@ -730,6 +730,13 @@ window.addEventListener('load', function load() {
 
   app.tools.changeColor = function(color) {
     if (color) {
+      // add border to dark color values
+      var m = color.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i);
+      if (m[1] + m[2] + m[3] < 100) {
+        cache.color.className = 'border';
+      } else {
+        cache.color.className = '';
+      }
       cache.color.style.backgroundColor = color;
     } else {
       cache.color.style.backgroundColor = 'transparent';
