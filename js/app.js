@@ -120,10 +120,6 @@ window.addEventListener('load', function load() {
         app.menu.zoomOut();
         break;
     }
-    for (var i = 0; i < cache.tools.length; i++) {
-      cache.tools[i].className = '';
-    }
-    document.getElementById(app.state.tool).className = 'selected';
   };
 
   // window resize
