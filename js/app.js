@@ -94,18 +94,23 @@ window.addEventListener('load', function load() {
     switch (e.keyCode) {
       case 66: // b
         app.state.tool = 'draw';
+        app.tools.select.call(cache.tools[0]);
         break;
       case 69: // e
         app.state.tool = 'erase';
+        app.tools.select.call(cache.tools[1]);
         break;
-      case 83: // e
+      case 83: // s
         app.state.tool = 'smudge';
+        app.tools.select.call(cache.tools[2]);
         break;
       case 71: // g
         app.state.tool = 'fill';
+        app.tools.select.call(cache.tools[3]);
         break;
       case 73: // i
         app.state.tool = 'eyedrop';
+        app.tools.select.call(cache.tools[4]);
         break;
       case 90: // z
         app.menu.undo();
