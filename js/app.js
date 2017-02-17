@@ -125,6 +125,9 @@ window.addEventListener('load', function load() {
       case 90: // z
         app.menu.undo();
         break;
+      case 88: // x
+        app.menu.redo();
+        break;
       case 48: // 0
         app.menu.zoom100();
         break;
