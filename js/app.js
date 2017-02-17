@@ -153,7 +153,12 @@ window.addEventListener('load', function load() {
     for (var i = 0; i < app.file.height; i++) {
       var row = [];
       for (var j = 0; j < app.file.width; j++) {
-        var pixelColor = app.canvas.ctx.getImageData((j * app.state.pixelSize) + 1, (i * app.state.pixelSize) + 1, 1, 1).data;
+        var pixelColor;
+        if (app.state.pixelSize === 1) {
+          pixelColor = app.canvas.ctx.getImageData((j * app.state.pixelSize), (i * app.state.pixelSize), 1, 1).data;
+        } else {
+          pixelColor = app.canvas.ctx.getImageData((j * app.state.pixelSize) + 1, (i * app.state.pixelSize) + 1, 1, 1).data;
+        }
         row.push('rgba(' + pixelColor[0] + ', ' + pixelColor[1] + ', ' + pixelColor[2] + ', ' + pixelColor[3] + ')');
       }
       data.push(row);
