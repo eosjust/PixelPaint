@@ -54,6 +54,7 @@ window.addEventListener('load', function load() {
 
   app.state = {
     mouseDown  : false,
+    cMouseDown : false,
     menuOver   : false,
     menuDown   : false,
     toolOver   : false,
@@ -87,6 +88,15 @@ window.addEventListener('load', function load() {
 
   app.mouseUp = function() {
     app.state.mouseDown = false;
+    if (app.state.cMouseDown) {
+      app.state.cMouseDown = false;
+      // update data
+      app.data.update();
+      // update undo state
+      if (app.state.tool !== 'eyedrop') {
+        app.canvas.undoArrayUpdate();
+      }
+    }
   };
 
   app.keydown = function(e) {
@@ -838,11 +848,13 @@ window.addEventListener('load', function load() {
     // mouse move canvas event
     canvas.onmousemove = function(event) {
       if (app.state.mouseDown) {
+        app.state.cMouseDown = true;
         app.canvas.update(event.clientX, event.clientY, false);
       }
     };
     // mouse up canvas event
     canvas.onmouseup = function(event) {
+      app.state.cMouseDown = false;
       // update data
       app.data.update();
       // update undo state
