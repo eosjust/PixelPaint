@@ -129,8 +129,14 @@ window.addEventListener('load', function load() {
         case 88: // x
           app.menu.redo();
           break;
-        case 48: // 0
+        case 49: // 1
           app.menu.zoom100();
+          break;
+        case 50: // 2
+          app.menu.zoom200();
+          break;
+        case 48: // 0
+          app.menu.zoomFit();
           break;
         case 187: // +
           app.menu.zoomIn();
