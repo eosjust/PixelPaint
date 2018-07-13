@@ -1,0 +1,407 @@
+* {
+	margin: 0;
+	padding: 0;
+	font-family: monospace;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+
+body {
+	background-color: #444;
+}
+
+.hidden {
+	display: none;
+}
+
+/* menu */
+
+#menu {
+	position: fixed;
+	left: 0;
+	top: 0;
+	right: 0;
+	background-color: #000;
+	height: 24px;
+	list-style: none;
+	z-index: 100;
+	box-shadow: 2px 2px 2px #000;
+}
+
+#menu > li {
+	position: relative;
+	color: #fff;
+	line-height: 24px;
+	float: left;
+	padding: 0 10px;
+	cursor: pointer;
+}
+
+#menu > li:hover {
+	background-color: #333;
+	border-radius: 5px;
+}
+
+#menu > li.selected {
+	background-color: #666;
+	border-radius: 0;
+}
+
+#menu > li > ul {
+	position: absolute;
+	left: 0;
+	top: 24px;
+	background-color: #666;
+	list-style: none;
+	display: none;
+}
+
+#menu > li.selected > ul {
+	display: block;
+	padding: 4px 0;
+	box-shadow: 2px 2px 2px #000;
+}
+
+#menu > li > ul > li {
+	padding: 0 24px 0 24px;
+	line-height: 24px;
+	position: relative;
+	white-space: nowrap;
+}
+
+#menu > li > ul > li.paddingLeft {
+	padding: 0 34px 0 24px;
+}
+
+#menu > li > ul > li:hover {
+	color: #333;
+	background-color: #ddd;
+}
+
+#menu > li > ul > li > ul {
+	position: absolute;
+	left: 100%;
+	top: -4px;
+	color: #fff;
+	background-color: #666;
+	padding: 4px 0;
+	box-shadow: 2px 2px 2px #000;
+	list-style: none;
+	display: none;
+}
+
+#menu > li > ul > li:hover > ul {
+	display: block;
+}
+
+#menu > li > ul > li > ul > li {
+	padding: 0 24px 0 24px;
+}
+
+#menu > li > ul > li > ul > li.paddingLeft {
+	padding: 0 34px 0 24px;
+}
+
+#menu > li > ul > li > ul > li:hover {
+	color: #333;
+	background-color: #ddd;
+}
+
+#menu .check {
+	position: absolute;
+	left: 10px;
+}
+
+#menu .arrow {
+	position: absolute;
+	right: 8px;
+}
+
+/* tools */
+
+#tools {
+	position: fixed;
+	left: 0;
+	top: 24px;
+	bottom: 0;
+	padding-top: 10px;
+	background-color: #000;
+	color: #fff;
+	box-shadow: 2px 2px 2px #000;
+	z-index: 50;
+}
+
+#tools > div {
+	width: 32px;
+	height: 32px;
+	margin: 8px 6px;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+#tools > div:hover {
+	background-color: #333;
+}
+
+#draw, #erase, #smudge, #fill, #eyedrop {
+	background-image: url(./icons.png);
+	background-size: 64px 160px;
+}
+
+#draw.selected {
+	background-position: 32px 0;
+}
+
+#erase {
+	background-position: 0px -32px;
+}
+
+#erase.selected {
+	background-position: 32px -32px;
+}
+
+#smudge {
+	background-position: 0px -64px;
+}
+
+#smudge.selected {
+	background-position: 32px -64px;
+}
+
+#fill {
+	background-position: 0px -96px;
+}
+
+#fill.selected {
+	background-position: 32px -96px;
+}
+
+#eyedrop {
+	background-position: 0px 32px;
+}
+
+#eyedrop.selected {
+	background-position: 32px 32px;
+}
+
+#color.border {
+	width: 28px;
+	height: 28px;
+	border: 2px solid #545454;
+}
+
+#colorPanel {
+	position: absolute;
+	border-collapse: collapse;
+	border-spacing: 0px;
+	box-shadow: 2px 2px 2px #000;
+	left: 58px;
+	top: -78px;
+	width: 336px;
+	margin-top: 267px;
+	border-radius: 5px;
+	display: none;
+}
+
+#colorPanel.selected {
+	display: block;
+}
+
+#colorPanel td {
+	color: #000;
+	width: 24px;
+	height: 24px;
+	line-height: 24px;
+	text-align: center;
+	cursor: pointer;
+}
+
+#colorPanel td span {
+	color: #fff;
+}
+
+/* canvas */
+
+#canvas {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	background-color: #ddd;
+	border: 1px solid #000;
+	box-shadow: 2px 2px 2px #000;
+	cursor: crosshair;
+}
+
+#canvas canvas {
+	vertical-align: top;
+}
+
+/* modal */
+
+#modal {
+	color: #fff;
+	background-color: #000;
+	width: 400px;
+	padding: 30px;
+	position: fixed;
+	left: 50%;
+	top: 36%;
+	margin-left: -220px;
+	box-shadow: 2px 2px 2px #000;
+}
+
+#modal #closeModal {
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding: 6px;
+	cursor: pointer;
+}
+
+#modal p, #modal h2 {
+	padding: 6px 0;
+}
+
+#modal a {
+	color: #aaa;
+}
+
+#modal form {
+	float: left;
+	width: 248px;
+	margin-bottom: -10px;
+}
+
+#modal p.label {
+	float: left;
+	width: 116px;
+	line-height: 27px;
+	padding: 0;
+	margin-bottom: 10px;
+}
+
+#modal input {
+	float: right;
+	width: 120px;
+	padding: 6px;
+	margin-bottom: 10px;
+	border: none;
+}
+
+#modal #openFile input {
+	width: 100%;
+}
+
+#modal #anchorTable {
+	float: right;
+	width: 132px;
+	height: 132px;
+	background-color: #fff;
+	margin-bottom: 10px;
+}
+
+#modal #anchorTable > div {
+	float: left;
+	width: 42px;
+	height: 42px;
+	margin: 1px;
+	background-color: #000;
+	cursor: pointer;
+}
+
+#modal #anchorTable > div:hover {
+	background-color: #fff;
+}
+
+#modal #anchorTable > div.selected {
+	background-color: #fff;
+}
+
+#modal .btns {
+	width: 152px;
+	float: left;
+	margin-bottom: -20px;
+}
+
+#modal .btn {
+	width: 100px;
+	padding: 10px;
+	margin: 0 0 20px 30px;
+	display: inline-block;
+	text-align: center;
+	border: 1px solid #fff;
+	cursor: pointer;
+}
+
+#modal .btn.select {
+	color: #000;
+	background-color: #fff;
+}
+
+#modal .btn:hover {
+	color: #fff;
+	background-color: #666;
+	border-color:#fff;
+}
+
+/* nes colors */
+
+.c00 { background-color: rgb(124,124,124); border-top-left-radius: 4px; }
+.c01 { background-color: rgb(0,0,252); }
+.c02 { background-color: rgb(0,0,188); }
+.c03 { background-color: rgb(68,40,188); }
+.c04 { background-color: rgb(148,0,132); }
+.c05 { background-color: rgb(168,0,32); }
+.c06 { background-color: rgb(168,16,0); }
+.c07 { background-color: rgb(136,20,0); }
+.c08 { background-color: rgb(80,48,0); }
+.c09 { background-color: rgb(0,120,0); }
+.c0A { background-color: rgb(0,104,0); }
+.c0B { background-color: rgb(0,88,0); }
+.c0C { background-color: rgb(0,64,88); }
+.c0D { background-color: rgb(0,0,0); border-top-right-radius: 4px; }
+.c10 { background-color: rgb(188,188,188); }
+.c11 { background-color: rgb(0,120,248); }
+.c12 { background-color: rgb(0,88,248); }
+.c13 { background-color: rgb(104,68,252); }
+.c14 { background-color: rgb(216,0,204); }
+.c15 { background-color: rgb(228,0,88); }
+.c16 { background-color: rgb(248,56,0); }
+.c17 { background-color: rgb(228,92,16); }
+.c18 { background-color: rgb(172,124,0); }
+.c19 { background-color: rgb(0,184,0); }
+.c1A { background-color: rgb(0,168,0); }
+.c1B { background-color: rgb(0,168,68); }
+.c1C { background-color: rgb(0,136,136); }
+.c1D { background-color: rgb(0,0,0); }
+.c20 { background-color: rgb(248,248,248); }
+.c21 { background-color: rgb(60,188,252); }
+.c22 { background-color: rgb(104,136,252); }
+.c23 { background-color: rgb(152,120,248); }
+.c24 { background-color: rgb(248,120,248); }
+.c25 { background-color: rgb(248,88,152); }
+.c26 { background-color: rgb(248,120,88); }
+.c27 { background-color: rgb(252,160,68); }
+.c28 { background-color: rgb(248,184,0); }
+.c29 { background-color: rgb(184,248,24); }
+.c2A { background-color: rgb(88,216,84); }
+.c2B { background-color: rgb(88,248,152); }
+.c2C { background-color: rgb(0,232,216); }
+.c2D { background-color: rgb(120,120,120); }
+.c30 { background-color: rgb(256,256,256); border-bottom-left-radius: 4px; }
+.c31 { background-color: rgb(164,228,252); }
+.c32 { background-color: rgb(184,184,248); }
+.c33 { background-color: rgb(216,184,248); }
+.c34 { background-color: rgb(248,184,248); }
+.c35 { background-color: rgb(248,164,192); }
+.c36 { background-color: rgb(240,208,176); }
+.c37 { background-color: rgb(252,224,168); }
+.c38 { background-color: rgb(248,216,120); }
+.c39 { background-color: rgb(216,248,120); }
+.c3A { background-color: rgb(184,248,184); }
+.c3B { background-color: rgb(184,248,216); }
+.c3C { background-color: rgb(0,252,252); }
+.c3D { background-color: rgb(216,216,216); border-bottom-right-radius: 4px; }
