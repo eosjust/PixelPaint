@@ -101,42 +101,50 @@ window.addEventListener('load', function load() {
 
   app.keydown = function(e) {
     // keyboard shortcuts
-    switch (e.keyCode) {
-      case 66: // b
-        app.state.tool = 'draw';
-        app.tools.select.call(cache.tools[0]);
-        break;
-      case 69: // e
-        app.state.tool = 'erase';
-        app.tools.select.call(cache.tools[1]);
-        break;
-      case 83: // s
-        app.state.tool = 'smudge';
-        app.tools.select.call(cache.tools[2]);
-        break;
-      case 71: // g
-        app.state.tool = 'fill';
-        app.tools.select.call(cache.tools[3]);
-        break;
-      case 73: // i
-        app.state.tool = 'eyedrop';
-        app.tools.select.call(cache.tools[4]);
-        break;
-      case 90: // z
-        app.menu.undo();
-        break;
-      case 88: // x
-        app.menu.redo();
-        break;
-      case 48: // 0
-        app.menu.zoom100();
-        break;
-      case 187: // +
-        app.menu.zoomIn();
-        break;
-      case 189: // -
-        app.menu.zoomOut();
-        break;
+    if (cache.modal.className === 'hidden') {
+      switch (e.keyCode) {
+        case 66: // b
+          app.state.tool = 'draw';
+          app.tools.select.call(cache.tools[0]);
+          break;
+        case 69: // e
+          app.state.tool = 'erase';
+          app.tools.select.call(cache.tools[1]);
+          break;
+        case 83: // s
+          app.state.tool = 'smudge';
+          app.tools.select.call(cache.tools[2]);
+          break;
+        case 71: // g
+          app.state.tool = 'fill';
+          app.tools.select.call(cache.tools[3]);
+          break;
+        case 73: // i
+          app.state.tool = 'eyedrop';
+          app.tools.select.call(cache.tools[4]);
+          break;
+        case 90: // z
+          app.menu.undo();
+          break;
+        case 88: // x
+          app.menu.redo();
+          break;
+        case 49: // 1
+          app.menu.zoom100();
+          break;
+        case 50: // 2
+          app.menu.zoom200();
+          break;
+        case 48: // 0
+          app.menu.zoomFit();
+          break;
+        case 187: // +
+          app.menu.zoomIn();
+          break;
+        case 189: // -
+          app.menu.zoomOut();
+          break;
+      }
     }
   };
 
@@ -384,6 +392,21 @@ window.addEventListener('load', function load() {
       app.canvas.create();
       app.data.load();
     }
+  };
+
+  // Zoom to Fit
+
+  app.menu.zoomFit = function() {
+    app.data.update();
+    var pixelSizeWidth = Math.floor((window.innerWidth - 50) / app.file.width),
+        pixelSizeHeight = Math.floor((window.innerHeight - 46) / app.file.height);
+    if (pixelSizeWidth * app.file.width < pixelSizeHeight * app.file.width) {
+      app.state.pixelSize = pixelSizeWidth ? pixelSizeWidth : 1;
+    } else {
+      app.state.pixelSize = pixelSizeHeight ? pixelSizeHeight : 1;
+    }
+    app.canvas.create();
+    app.data.load();
   };
 
   // zoom 100
