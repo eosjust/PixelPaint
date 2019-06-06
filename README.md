@@ -2,8 +2,8 @@
 
 *version 0.2*
 
-browser-based sprite editor
+A browser-based sprite editor.
 
-    git clone git@github.com:robertmermet/pixelpaint.git
+    git clone git@github.com:robertmermet/PixelPaint.git
 
->**demo** [robertmermet.com/projects/pixelpaint](http://robertmermet.com/projects/pixelpaint)
+>**demo** [robertmermet.com/projects/PixelPaint](http://robertmermet.com/projects/PixelPaint)
